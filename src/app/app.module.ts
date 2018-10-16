@@ -2,14 +2,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { WebSocketComponent } from './web-socket/web-socket.component';
 import { WebSocketSubjectComponent } from './web-socket-subject/web-socket-subject.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    WebSocketComponent,
-    WebSocketSubjectComponent
+    WebSocketSubjectComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

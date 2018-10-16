@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { WebSocketService } from '../shared/service/web-socket-service.service';
-import { IPacket } from '../shared/model/packet/IPacket';
 import { LoginAuthReq } from '../bussiness/login/packet/LoginAuthReq';
 
 @Component({
-  selector: 'app-web-socket',
-  templateUrl: './web-socket.component.html',
-  styleUrls: ['./web-socket.component.css']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
-export class WebSocketComponent implements OnInit {
+export class LoginComponent implements OnInit {
   account: string;
   password: string;
 
   constructor(
     private wsService: WebSocketService,
     private loginAuthReq: LoginAuthReq
-    ) { }
+  ) { }
+
   ngOnInit() {
   }
 
