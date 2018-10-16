@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WebSocketService } from '../shared/service/web-socket-service.service';
+import { IPacket } from '../shared/model/packet/IPacket';
+import { LoginAuthReq } from '../bussiness/login/packet/LoginAuthReq';
 
 @Component({
   selector: 'app-web-socket',
@@ -9,24 +11,21 @@ import { WebSocketService } from '../shared/service/web-socket-service.service';
 export class WebSocketComponent implements OnInit {
   clientMessage: string;
 
-  constructor(private wsService: WebSocketService) { }
+  constructor(
+    private wsService: WebSocketService,
+    private loginAuthReq:LoginAuthReq
+    ) { }
   
   ngOnInit() {
-    // 订阅了服务器发送过来的消息，并把消息打印在控制台上
-    this.wsService.createObservableSocket("ws://localhost:8088/")
-    .subscribe(
-      data => console.log(data),
-      err => console.log(err),
-      () => console.log("流已经结束")
-    );
   }
 
   // 向服务端发送消息
-  send():void {
+  sendPacket<T extends IPacket>(message:T):void {
     if (this.clientMessage===undefined){
       return;
     }
-    console.log("发送的内容："+this.clientMessage);
-    this.wsService.sendMessage(this.clientMessage);
+    this.loginAuthReq.$account="sando";
+    this.loginAuthReq.$password="123456";
+    this.wsService.sendMessage(this.loginAuthReq);
   }
 }
