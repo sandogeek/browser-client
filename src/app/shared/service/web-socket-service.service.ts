@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ReqPakcet} from '../model/packet/ReqPacket';
-import { RespPacket } from '../model/packet/RespPakcet';
+// import { RespPacket } from '../model/packet/RespPakcet';
 import { IPacket } from '../model/packet/IPacket';
 import { PacketId } from '../model/packet/PacketId';
 import { load, Root } from 'protobufjs';
@@ -12,7 +12,7 @@ import { load, Root } from 'protobufjs';
 })
 export class WebSocketService {
   private ws: WebSocket;
-  private observable: Observable<RespPacket>;
+  private observable: Observable<any>;
 
     /**
      * Getter $ws
@@ -24,9 +24,9 @@ export class WebSocketService {
 
     /**
      * Getter $observable
-     * @return {Observable<RespPacket>}
+     * @return {Observable<any>}
      */
-  public get $observable(): Observable<RespPacket> {
+  public get $observable(): Observable<any> {
     return this.observable;
   }
 
@@ -40,30 +40,24 @@ export class WebSocketService {
 
     /**
      * Setter $observable
-     * @param {Observable<RespPacket>} value
+     * @param {Observable<any>} value
      */
-  public set $observable(value: Observable<RespPacket>) {
+  public set $observable(value: Observable<any>) {
     this.observable = value;
   }
 
   constructor(
     private packetId: PacketId
   ) {
-    // 订阅了服务器发送过来的消息，并把消息打印在控制台上
-    this.createObservableSocket('ws://localhost:8088/')
-    .subscribe(
-      data => console.log(data),
-      err => console.log(err),
-      () => console.log('流已经结束')
-    );
   }
 
   // 返回一个可观测的流，包括服务器返回的消息
-  createObservableSocket(url: string): Observable<RespPacket> {
+  createObservableSocket(url: string): Observable<any> {
     this.ws = new WebSocket(url);
     this.ws.binaryType = 'arraybuffer';
     return new Observable(
       observer => {
+        this.ws.onopen = (event) => observer.next('连接到服务器成功');
         this.ws.onmessage = (event) => {
           // 把event.data转化为RespPacket
           observer.next(event.data);

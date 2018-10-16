@@ -9,7 +9,7 @@ import { WebSocketService } from './shared/service/web-socket-service.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'browser-client';
+  title = '长生界';
 
   constructor(
     private websocketService: WebSocketService
