@@ -1,4 +1,13 @@
 # BrowserClient
+## 准备工作
+项目运行前需要先在项目根目录运行：
+```bash
+npm install
+```
+以安装项目所需的所有依赖。
+## 调试
+`alt+shift+f10`运行任务`npm start`，再到debug下运行`启动浏览器方式调试`
+
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.4.
 
