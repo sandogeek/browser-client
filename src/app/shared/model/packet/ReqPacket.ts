@@ -25,8 +25,10 @@ export class ReqPakcet {
         // 复合视图
         // 第0-1字节: 一个16位无符号整数
         // 第2-末尾字节： 8位无符号整数数组（protobuff对象）
-        const packetIdView = new Uint16Array(buffer, 0, 1);
-        packetIdView[0] = this.packetId;
+        const dataV = new  DataView(buffer);
+        // 必须采用大端字节序服务端读取到的数据才正常
+        dataV.setUint16(0, this.packetId);
+        // 单个字节无需区分字节序，所以可以用Uint8Array视图，否则必须用DataView确保大端字节序
         const dataView = new Uint8Array(buffer, 2);
         let i = 0;
         this.data.forEach(element => {
