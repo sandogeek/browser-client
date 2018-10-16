@@ -1,6 +1,6 @@
-import { Injectable, OnInit } from "@angular/core";
-import { PacketId } from "../../../shared/model/packet/PacketId";
-import { IPacket } from "../../../shared/model/packet/IPacket";
+import { Injectable, OnInit } from '@angular/core';
+import { PacketId } from '../../../shared/model/packet/PacketId';
+import { IPacket } from '../../../shared/model/packet/IPacket';
 
 /**
  * 登录认证请求
@@ -8,15 +8,16 @@ import { IPacket } from "../../../shared/model/packet/IPacket";
 @Injectable({
   providedIn: 'root'
 })
-export class LoginAuthReq implements OnInit,IPacket{
+export class LoginAuthReq implements IPacket {
 
-    private account:string;
-    
-    private password:string;
+    private account: string;
 
-	constructor(
-        private packetId:PacketId
+    private password: string;
+
+    constructor(
+        private packetId: PacketId
     ) {
+        PacketId.put(PacketId.LOGIN_AUTH_REQ, this.getClassName());
     }
 
     /**
@@ -50,12 +51,8 @@ export class LoginAuthReq implements OnInit,IPacket{
 	public set $password(value: string) {
 		this.password = value;
 	}
-    
-    ngOnInit() {
-        PacketId.put(PacketId.LOGIN_AUTH_REQ,this.getClassName());
-    }
 
-    getClassName(){
-        return "LoginAuthReq";
+    getClassName() {
+        return 'LoginAuthReq';
     }
 }

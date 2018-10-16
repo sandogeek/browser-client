@@ -17,9 +17,9 @@ export class PacketId {
     static valueOf() {
         return new PacketId();
     }
-    static put(packetId: number, classtype: string) {
-        PacketId.class2PacketId.set(classtype, packetId);
-        PacketId.packetId2Class.set(packetId, classtype);
+    static put(packetId: number, classtName: string) {
+        PacketId.class2PacketId.set(classtName, packetId);
+        PacketId.packetId2Class.set(packetId, classtName);
     }
     static get(obj: number): string;
     static get(obj: string): number;
