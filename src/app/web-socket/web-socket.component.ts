@@ -9,7 +9,8 @@ import { LoginAuthReq } from '../bussiness/login/packet/LoginAuthReq';
   styleUrls: ['./web-socket.component.css']
 })
 export class WebSocketComponent implements OnInit {
-  clientMessage: string;
+  account: string;
+  password: string;
 
   constructor(
     private wsService: WebSocketService,
@@ -19,12 +20,9 @@ export class WebSocketComponent implements OnInit {
   }
 
   // 向服务端发送消息
-  sendPacket<T extends IPacket>(message: T): void {
-    if (this.clientMessage === undefined) {
-      return;
-    }
-    this.loginAuthReq.$account = 'sando1';
-    this.loginAuthReq.$password = '123456';
-    this.wsService.sendMessage(this.loginAuthReq);
+  sendPacket() {
+    this.loginAuthReq.$account = this.account;
+    this.loginAuthReq.$password = this.password;
+    this.wsService.sendPacket(this.loginAuthReq);
   }
 }

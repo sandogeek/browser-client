@@ -73,30 +73,34 @@ export class WebSocketService {
       });
   }
   // 向服务器端发送消息
-  sendMessage<T extends IPacket>(message: T): void {
+  sendPacket<T extends IPacket>(message: T): void {
     // TODO 把message转换为ReqPacket
     // 获取请求包packetId
-    const id = PacketId.class2PacketId.get((message as IPacket).getClassName());
+    const className = message.getClassName();
+    const id = PacketId.class2PacketId.get(className);
     // 拿到protobufjs生成的字节数组，封装成ReqPakcet
     const myroot = new Root();
-    load(`src/assets/proto/${(message as IPacket).getClassName()}.proto`, myroot , (err, root) => {
+    load(`src/assets/proto/${className}.proto`, myroot , (err, root) => {
       if (err) {
         throw err;
       }
 
       // example code
-      const proxy = root.lookupType('LoginAuthReq');
+      const proxy = root.lookupType(className);
 
       const result = proxy.create(message);
-      console.log(`message = ${JSON.stringify(result)}`);
+      console.log(`发送请求包：packetId[${id}] 类名[${className}] 内容\n${JSON.stringify(result)}`);
 
       const buffer = proxy.encode(message).finish();
-      console.log(`buffer = ${Array.prototype.toString.call(buffer)}`);
+      // console.log(`buffer = ${Array.prototype.toString.call(buffer)}`);
 
-      const decoded = proxy.decode(buffer);
-      console.log(`decoded = ${JSON.stringify(decoded)}`);
+      // const decoded = proxy.decode(buffer);
+      // console.log(`decoded = ${JSON.stringify(decoded)}`);
       const reqPacket = ReqPakcet.valueOf(id, buffer);
-      this.ws.send(reqPacket.getBuffer());
+      // 实际发送的数据
+      const sendData = reqPacket.getBuffer();
+      // console.log(`实际发送的数据：${Array.prototype.map.call(new Uint8Array(sendData), x => x.toString(10)).join(',')}`);
+      this.ws.send(sendData);
     });
   }
 }
