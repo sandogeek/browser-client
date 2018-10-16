@@ -13,19 +13,18 @@ export class WebSocketComponent implements OnInit {
 
   constructor(
     private wsService: WebSocketService,
-    private loginAuthReq:LoginAuthReq
+    private loginAuthReq: LoginAuthReq
     ) { }
-  
   ngOnInit() {
   }
 
   // 向服务端发送消息
-  sendPacket<T extends IPacket>(message:T):void {
-    if (this.clientMessage===undefined){
+  sendPacket<T extends IPacket>(message: T): void {
+    if (this.clientMessage === undefined) {
       return;
     }
-    this.loginAuthReq.$account="sando";
-    this.loginAuthReq.$password="123456";
+    this.loginAuthReq.$account = 'sando1';
+    this.loginAuthReq.$password = '123456';
     this.wsService.sendMessage(this.loginAuthReq);
   }
 }

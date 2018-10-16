@@ -1,5 +1,5 @@
-import { Type } from "@angular/core";
+import { Type } from '@angular/core';
 
-export interface IPacket{
-    getClassName():string;
+export interface IPacket {
+    getClassName(): string;
 }
