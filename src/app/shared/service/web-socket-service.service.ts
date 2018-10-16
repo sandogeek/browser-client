@@ -11,11 +11,51 @@ import { load, Root } from 'protobufjs';
   providedIn: 'root'
 })
 export class WebSocketService {
-  ws: WebSocket;
+  private ws: WebSocket;
+  private observable: Observable<RespPacket>;
+
+    /**
+     * Getter $ws
+     * @return {WebSocket}
+     */
+  public get $ws(): WebSocket {
+    return this.ws;
+  }
+
+    /**
+     * Getter $observable
+     * @return {Observable<RespPacket>}
+     */
+  public get $observable(): Observable<RespPacket> {
+    return this.observable;
+  }
+
+    /**
+     * Setter $ws
+     * @param {WebSocket} value
+     */
+  public set $ws(value: WebSocket) {
+    this.ws = value;
+  }
+
+    /**
+     * Setter $observable
+     * @param {Observable<RespPacket>} value
+     */
+  public set $observable(value: Observable<RespPacket>) {
+    this.observable = value;
+  }
 
   constructor(
     private packetId: PacketId
   ) {
+    // 订阅了服务器发送过来的消息，并把消息打印在控制台上
+    this.createObservableSocket('ws://localhost:8088/')
+    .subscribe(
+      data => console.log(data),
+      err => console.log(err),
+      () => console.log('流已经结束')
+    );
   }
 
   // 返回一个可观测的流，包括服务器返回的消息
@@ -59,5 +99,4 @@ export class WebSocketService {
       this.ws.send(reqPacket.getBuffer());
     });
   }
-
 }
