@@ -53,6 +53,6 @@ export class LoginAuthReq implements IPacket {
 	}
 
     getClassName() {
-        return 'LoginAuthReq';
+        return this.constructor.name;
     }
 }
