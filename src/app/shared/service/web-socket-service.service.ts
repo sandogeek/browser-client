@@ -1,6 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ReqPakcet} from '../model/packet/ReqPacket';
+import { WsPacket} from '../model/packet/ReqPacket';
 // import { RespPacket } from '../model/packet/RespPakcet';
 import { IPacket } from '../model/packet/IPacket';
 import { PacketId } from '../model/packet/PacketId';
@@ -82,18 +82,18 @@ export class WebSocketService {
       // example code
       const proxy = root.lookupType(className);
 
-      const result = proxy.create(message);
-      console.log(`发送请求包：packetId[${id}] 类名[${className}] 内容\n${JSON.stringify(result)}`);
+      // const result = proxy.create(message);
+      // console.log(`发送请求包：packetId[${id}] 类名[${className}] 内容\n${JSON.stringify(result)}`);
 
       const buffer = proxy.encode(message).finish();
-      // console.log(`buffer = ${Array.prototype.toString.call(buffer)}`);
+      console.log(`buffer = ${Array.prototype.toString.call(buffer)}`);
 
       // const decoded = proxy.decode(buffer);
       // console.log(`decoded = ${JSON.stringify(decoded)}`);
-      const reqPacket = ReqPakcet.valueOf(id, buffer);
+      const reqPacket = WsPacket.valueOf(id, buffer);
       // 实际发送的数据
       const sendData = reqPacket.getBuffer();
-      // console.log(`实际发送的数据：${Array.prototype.map.call(new Uint8Array(sendData), x => x.toString(10)).join(',')}`);
+      console.log(`实际发送的数据：${Array.prototype.map.call(new Uint8Array(sendData), x => x.toString(10)).join(',')}`);
       this.ws.send(sendData);
     });
   }

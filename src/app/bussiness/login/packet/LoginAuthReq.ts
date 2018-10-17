@@ -3,7 +3,7 @@ import { PacketId } from '../../../shared/model/packet/PacketId';
 import { IPacket } from '../../../shared/model/packet/IPacket';
 
 /**
- * 登录认证请求
+ * 类名必须和.proto文件名一致，.proto文件名必须与里面的message名一致
  */
 @Injectable({
   providedIn: 'root'
