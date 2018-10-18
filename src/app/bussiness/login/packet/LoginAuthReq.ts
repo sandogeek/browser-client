@@ -1,23 +1,18 @@
 import { Injectable, OnInit } from '@angular/core';
 import { PacketId } from '../../../shared/model/packet/PacketId';
-import { IPacket } from '../../../shared/model/packet/IPacket';
+import { AbstractPacket } from '../../../shared/model/packet/AbstractPacket';
 
 /**
  * 类名必须和.proto文件名一致，.proto文件名必须与里面的message名一致
  */
-@Injectable({
-  providedIn: 'root'
-})
-export class LoginAuthReq implements IPacket {
+export class LoginAuthReq extends AbstractPacket {
 
     private account: string;
 
     private password: string;
 
-    constructor(
-        private packetId: PacketId
-    ) {
-        PacketId.put(PacketId.LOGIN_AUTH_REQ, this.getClassName());
+    constructor() {
+        super();
     }
 
     /**
@@ -52,7 +47,7 @@ export class LoginAuthReq implements IPacket {
 		this.password = value;
 	}
 
-    getClassName() {
-        return this.constructor.name;
+    getPacketId() {
+        return PacketId.LOGIN_AUTH_REQ;
     }
 }

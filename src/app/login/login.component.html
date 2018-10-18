@@ -7,7 +7,7 @@
 </div>
 <div *ngIf="state===1">
   <p>{{hint}}</p>
-  <form (submit)="sendPacket()">
+  <form (submit)="sendPacket()" method="post">
       <label for="account">帐号：</label>
       <input name="account" placeholder="帐号" type="text" [(ngModel)]="account">
       <label for="account">密码：</label>

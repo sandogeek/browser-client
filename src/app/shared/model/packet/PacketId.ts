@@ -1,22 +1,15 @@
 import { Injectable, Type } from '@angular/core';
 
-
-
-@Injectable({
-  providedIn: 'root'
-})
 export class PacketId {
     static readonly class2PacketId = new Map<string, number>();
     static readonly packetId2Class = new Map<number, string>();
 
     // 登录认证请求
-    static readonly LOGIN_AUTH_REQ = 10001;
+    static readonly LOGIN_AUTH_REQ:number = 10001;
 
     constructor() {
     }
-    static valueOf() {
-        return new PacketId();
-    }
+    
     static put(packetId: number, classtName: string) {
         PacketId.class2PacketId.set(classtName, packetId);
         PacketId.packetId2Class.set(packetId, classtName);

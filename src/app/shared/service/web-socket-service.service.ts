@@ -2,10 +2,9 @@ import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { WsPacket} from '../model/packet/ReqPacket';
 // import { RespPacket } from '../model/packet/RespPakcet';
-import { IPacket } from '../model/packet/IPacket';
+import { AbstractPacket } from '../model/packet/AbstractPacket';
 import { PacketId } from '../model/packet/PacketId';
 import { load, Root } from 'protobufjs';
-
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +12,8 @@ import { load, Root } from 'protobufjs';
 export class WebSocketService {
   private ws: WebSocket;
   private observable: Observable<any>;
+  // 缓存.proto的代理对象
+  private myroot = new Root();
 
     /**
      * Getter $ws
@@ -46,9 +47,7 @@ export class WebSocketService {
     this.observable = value;
   }
 
-  constructor(
-    private packetId: PacketId
-  ) {
+  constructor() {
   }
 
   // 返回一个可观测的流，包括服务器返回的消息
@@ -67,19 +66,17 @@ export class WebSocketService {
       });
   }
   // 向服务器端发送消息
-  sendPacket<T extends IPacket>(message: T): void {
+  sendPacket<T extends AbstractPacket>(message: T): void {
     // TODO 把message转换为ReqPacket
     // 获取请求包packetId
-    const className = message.getClassName();
-    const id = PacketId.class2PacketId.get(className);
+    const id = message.getPacketId();
+    const className = PacketId.packetId2Class.get(id);
     // 拿到protobufjs生成的字节数组，封装成ReqPakcet
-    const myroot = new Root();
-    load(`src/assets/proto/${className}.proto`, myroot , (err, root) => {
+    load(`src/assets/proto/${className}.proto`, this.myroot , (err, root) => {
       if (err) {
         throw err;
       }
 
-      // example code
       const proxy = root.lookupType(className);
 
       // const result = proxy.create(message);

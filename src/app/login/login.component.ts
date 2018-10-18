@@ -20,7 +20,6 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private wsService: WebSocketService,
-    private loginAuthReq: LoginAuthReq
   ) {
     this.address = 'localhost';
     this.state = 2;
@@ -59,9 +58,10 @@ export class LoginComponent implements OnInit {
       this.hint = '密码不能为空';
       return;
     }
-    this.loginAuthReq.$account = this.account;
-    this.loginAuthReq.$password = this.password;
-    this.wsService.sendPacket(this.loginAuthReq);
+    let loginAuthReq = new LoginAuthReq();
+    loginAuthReq.$account = this.account;
+    loginAuthReq.$password = this.password;
+    this.wsService.sendPacket(loginAuthReq);
     this.hint = undefined;
   }
 }
