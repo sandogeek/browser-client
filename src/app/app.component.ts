@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angula
 import { WebSocketSubject } from 'rxjs/observable/dom/WebSocketSubject';
 import { Observable, Observer } from 'rxjs';
 import { WebSocketService } from './shared/service/web-socket-service.service';
+import { PacketId } from './shared/model/packet/PacketId';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ export class AppComponent implements OnInit {
   constructor(
     private websocketService: WebSocketService
     ) {
-
+      // 初始化PacketId以完成PacketId中的map的初始化
+      const packetId = new PacketId();
   }
   ngOnInit() {
   }

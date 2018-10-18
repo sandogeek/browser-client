@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WebSocketService } from '../shared/service/web-socket-service.service';
-import { LoginAuthReq } from '../bussiness/login/packet/LoginAuthReq';
 import { stringify } from '@angular/core/src/util';
+import { LoginAuthReq } from '../shared/model/proto/bundle';
 
 @Component({
   selector: 'app-login',
@@ -58,10 +58,8 @@ export class LoginComponent implements OnInit {
       this.hint = '密码不能为空';
       return;
     }
-    let loginAuthReq = new LoginAuthReq();
-    loginAuthReq.$account = this.account;
-    loginAuthReq.$password = this.password;
-    this.wsService.sendPacket(loginAuthReq);
+    // const loginAuthReq = LoginAuthReq.create();
+    this.wsService.sendPacket(LoginAuthReq, {account: this.account, password: this.password});
     this.hint = undefined;
   }
 }

@@ -1,10 +1,11 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { WsPacket} from '../model/packet/ReqPacket';
 // import { RespPacket } from '../model/packet/RespPakcet';
 import { AbstractPacket } from '../model/packet/AbstractPacket';
 import { PacketId } from '../model/packet/PacketId';
-import { load, Root } from 'protobufjs';
+import { load, Root, Writer, Type } from 'protobufjs';
+import { LoginAuthReq } from '../model/proto/bundle';
 
 @Injectable({
   providedIn: 'root'
@@ -66,32 +67,21 @@ export class WebSocketService {
       });
   }
   // 向服务器端发送消息
-  sendPacket<T extends AbstractPacket>(message: T): void {
+  sendPacket(messageClass: any, obj: any): void {
     // TODO 把message转换为ReqPacket
     // 获取请求包packetId
-    const id = message.getPacketId();
-    const className = PacketId.packetId2Class.get(id);
-    // 拿到protobufjs生成的字节数组，封装成ReqPakcet
-    load(`src/assets/proto/${className}.proto`, this.myroot , (err, root) => {
-      if (err) {
-        throw err;
-      }
-
-      const proxy = root.lookupType(className);
-
-      // const result = proxy.create(message);
-      // console.log(`发送请求包：packetId[${id}] 类名[${className}] 内容\n${JSON.stringify(result)}`);
-
-      const buffer = proxy.encode(message).finish();
-      console.log(`buffer = ${Array.prototype.toString.call(buffer)}`);
-
-      // const decoded = proxy.decode(buffer);
-      // console.log(`decoded = ${JSON.stringify(decoded)}`);
-      const reqPacket = WsPacket.valueOf(id, buffer);
-      // 实际发送的数据
-      const sendData = reqPacket.getBuffer();
-      console.log(`实际发送的数据：${Array.prototype.map.call(new Uint8Array(sendData), x => x.toString(10)).join(',')}`);
-      this.ws.send(sendData);
-    });
+    const id = PacketId.class2PacketId.get(messageClass.name);
+    // 参数校验
+    if (messageClass.verify(obj) != null) {
+      console.log(`传入参数${JSON.stringify(obj)}异常,必备字段不完整或不是${messageClass.name}对象`);
+      return;
+    }
+    console.log(`发送请求包：packetId[${id}] 类名[${messageClass.name}] 内容\n${JSON.stringify(obj)}`);
+    const messageUint8Array = messageClass.encode(obj).finish();
+    console.log(`messageUint8Array = ${Array.prototype.toString.call(messageUint8Array)}`);
+    const reqPacket = WsPacket.valueOf(id, messageUint8Array);
+    const sendData = reqPacket.getBuffer();
+    console.log(`实际发送的数据：${Array.prototype.map.call(new Uint8Array(sendData), x => x.toString(10)).join(',')}`);
+    this.ws.send(sendData);
   }
 }
