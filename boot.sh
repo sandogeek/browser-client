@@ -1,4 +1,5 @@
 #!/bin/bash
+# TODO 自动git pull \assets\proto文件夹和\src\app\shared\model\packet\PacketId.ts文件
 cd ./src/app
 if [ -d "shared" ]; then
     cd ./shared
