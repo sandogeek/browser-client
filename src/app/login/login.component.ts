@@ -31,8 +31,8 @@ export class LoginComponent implements OnInit {
   }
   connect() {
     // 订阅了服务器发送过来的消息，并把消息打印在控制台上
-    this.wsService.$observable = this.wsService.createObservableSocket(`ws://${this.address}:${this.port}/${this.subdir}`);
-    this.wsService.$observable.subscribe(
+    WebSocketService.observable = this.wsService.createObservableSocket(`ws://${this.address}:${this.port}/${this.subdir}`);
+    WebSocketService.observable.subscribe(
       data => {
         if (data as string) {
           this.state = 1;
