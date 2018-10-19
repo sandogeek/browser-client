@@ -6,10 +6,6 @@
         "identifier": "ng serve",
         "type": "npm",
         "script": "start",
-        "group": {
-          "kind": "build",
-          "isDefault": true
-        },
         "problemMatcher": {
           "owner": "typescript",
           "source": "ts",
@@ -31,11 +27,25 @@
         }
       },
       {
-        "type": "npm",
-        "script": "boot",
+        "label": "启动",
+        "type": "shell",
+        "command": "./boot.sh",
+        // "windows": {
+        //   "command": ".\\boot.cmd"
+        // },
+        "presentation": {
+          "reveal": "always"
+        },
+        // "args": [
+        //   "${workspaceFolder}"
+        // ],
         "problemMatcher": [
           "$tsc"
-        ]
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
       }
     ]
   }

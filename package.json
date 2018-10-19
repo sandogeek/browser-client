@@ -7,8 +7,7 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "boot": "cd src/app/shared/model/proto && pbjs -t static-module -w commonjs -o bundle.js ../../../../assets/proto/*.proto && pbts -o bundle.d.ts bundle.js && ng serve"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {

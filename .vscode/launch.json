@@ -19,7 +19,7 @@
         "request": "attach",
         "sourceMaps": true,
         "port": 8989,
-        "url": "http://localhost:4200/dashboard",
+        "url": "http://localhost:4200",
         "webRoot": "${workspaceFolder}",
         "trace": true,
         "userDataDir": "${workspaceRoot}/.vscode/chrome"
