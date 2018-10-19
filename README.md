@@ -1,12 +1,14 @@
 # BrowserClient
-## 准备工作
+## 准备工作：安装依赖
 项目运行前需要先在项目根目录运行：
 ```bash
 npm install
 ```
 以安装项目所需的所有依赖。
 ## 调试
-`alt+shift+f10`运行任务`npm start`，再到debug下运行`启动浏览器方式调试`
+1. 下载插件：Debugger for Chrome
+2. `ctrl+shift+p`输入defalt shell,选择默认终端为git bash
+3. `ctrl+f9`运行任务`启动`，其会执行boot.sh，脚本执行完毕后到debug面板下下运行`Attach`
 
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.4.
