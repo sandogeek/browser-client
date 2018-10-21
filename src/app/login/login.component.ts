@@ -20,7 +20,6 @@ export class LoginComponent implements OnInit {
   port: number;
   subdir: string;
   subscription: Subscription;
-  subscription2: Subscription;
   observer: NextObserver<any>;
   observer2: NextObserver<any>;
 
@@ -37,30 +36,15 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
   connect = () => {
-    // 订阅了服务器发送过来的消息，并把消息打印在控制台上
     this.wsService.createObservableSocket(`ws://${this.address}:${this.port}/${this.subdir}`);
     this.observer = {
       next : obj => {
         if ((obj as string) && this.state !== 1 ) {
           this.state = 1;
           this.hint = obj as string;
+          return;
         }
-        console.log(`来自观察者一号${JSON.stringify(obj)}`);
-      },
-      error: err => console.log(err),
-      complete: () => {
-        this.state = 3;
-        this.hint = '服务器已关闭此channel,请重新连接';
-        console.log(this.hint);
-      }
-    };
-    this.observer2 = {
-      next : obj => {
-        if (obj as string) {
-          this.state = 1;
-          this.hint = obj as string;
-        }
-        console.log(`来自观察者二号${JSON.stringify(obj)}`);
+        console.log(`login组件接收内容：packetId[${obj.packetId}] 类名[${obj.clazz.name}] 内容\n${JSON.stringify(obj.resp)}`);
       },
       error: err => console.log(err),
       complete: () => {
@@ -70,7 +54,6 @@ export class LoginComponent implements OnInit {
       }
     };
     this.subscription = this.wsService.observable.subscribe(this.observer);
-    this.subscription2 = this.wsService.observable.subscribe(this.observer2);
   }
   disconnect = () => {
     this.wsService.disconnect();
@@ -80,11 +63,6 @@ export class LoginComponent implements OnInit {
   unsubscribe = () => {
     if (this.subscription !== undefined) {
       this.subscription.unsubscribe();
-    }
-  }
-  unsubscribe2 = () => {
-    if (this.subscription !== undefined) {
-      this.subscription2.unsubscribe();
     }
   }
 

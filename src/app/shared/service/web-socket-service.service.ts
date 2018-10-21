@@ -31,23 +31,23 @@ export class WebSocketService {
   }
   // 当this.observable被.subscribe(x)调用,subscriber = x
   onSubscribe = (subscriber: Subscriber<any>) => {
+    // 添加观察者
     this.subscribers.push(subscriber);
     // console.log(this.subscribers.length);
-    // 只绑定一次就够了
+    // Websocket回调函数只绑定一次就够了
     if (this.subscribers.length === 1) {
       this.ws.onopen = (event) => {
         // console.log(`进来了`);
         this.conneted = true;
-        // 此处会触发x.next回调函数,由于每次.subscribe(x) x不相同，导致只有最后一个x.next回调函数被调用
+        // 此处会触发x.next回调函数
         this.subscribers.forEach((value, index, subscribers) => {
             value.next('连接到服务器成功');
-          // value.next('连接到服务器成功');
         });
       };
       // 接收响应消息时回调
       this.ws.onmessage = (event) => {
         // 查看收发数据是否一致
-        console.log(`实际接收的数据：${Array.prototype.map.call(new Uint8Array(event.data), x => x.toString(10)).join(',')}`);
+        // console.log(`实际接收的数据：${Array.prototype.map.call(new Uint8Array(event.data), x => x.toString(10)).join(',')}`);
         // 把event.data转化为相应的类对象
         if (event.data as ArrayBuffer) {
           /**
@@ -63,10 +63,18 @@ export class WebSocketService {
             return;
           }
           const messageClass = PacketId.packetId2Class.get(packetId);
+          if (messageClass === undefined) {
+            console.error(`PacketId中不存在id为${packetId}的包`);
+          }
           const obj = messageClass.decode(data);
-          console.log(`接收到的包：packetId[${packetId}] 类名[${messageClass.name}] 内容\n${JSON.stringify(obj)}`);
+          // console.log(`接收到的包：packetId[${packetId}] 类名[${messageClass.name}] 内容\n${JSON.stringify(obj)}`);
           this.subscribers.forEach((value, index, subscribers) => {
-            value.next(obj);
+            const nextData = {
+              packetId: packetId,
+              clazz : messageClass,
+              resp: obj
+            };
+            value.next(nextData);
             // value.next('连接到服务器成功');
           });
         }
@@ -115,7 +123,7 @@ export class WebSocketService {
     // console.log(`messageUint8Array = ${Array.prototype.toString.call(messageUint8Array)}`);
     const reqPacket = WsPacket.valueOf(id, messageUint8Array);
     const sendData = reqPacket.getBuffer();
-    console.log(`实际发送的数据：${Array.prototype.map.call(new Uint8Array(sendData), x => x.toString(10)).join(',')}`);
+    // console.log(`实际发送的数据：${Array.prototype.map.call(new Uint8Array(sendData), x => x.toString(10)).join(',')}`);
     this.ws.send(sendData);
   }
 }
