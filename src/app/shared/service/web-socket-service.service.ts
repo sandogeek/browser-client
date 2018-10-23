@@ -34,6 +34,7 @@ export class WebSocketService {
   onSubscribe = (subscriber: Subscriber<any>) => {
     // 添加观察者，因为使用的是循环subscribers,调用每个next，所以他们是同步的，如果前一个next发生耗时操作，会导致
     // 后一个订阅者无法及时接收到消息，可能导致问题，最好让每个观察者中的next error complete变成异步执行
+    console.log(this);
     this.subscribers.push(subscriber);
     // console.log(this.subscribers.length);
     // Websocket生命周期回调函数只绑定一次就够了
@@ -76,7 +77,7 @@ export class WebSocketService {
       // console.log(`实际接收的数据：${Array.prototype.map.call(new Uint8Array(event.data), x => x.toString(10)).join(',')}`);
       // 把event.data转化为相应的类对象
       if (event.data as ArrayBuffer) {
-        this.decodeWebSocketBinaryFrame(event);
+        this.decodeWebSocketBinaryFrameAndNext(event);
       }
     };
     this.ws.onerror = (event) => subscriber.error(event);
@@ -88,7 +89,7 @@ export class WebSocketService {
   /**
    * 解码服务器发过来的WebSocketBinaryFrame
    */
-  private decodeWebSocketBinaryFrame = (event: MessageEvent) => {
+  private decodeWebSocketBinaryFrameAndNext = (event: MessageEvent) => {
     /**
      * 0-3 包长 4-5 packetId 6-最后 probuf编码的对象
      */
@@ -117,6 +118,7 @@ export class WebSocketService {
     });
   }
   // 正常地断开与服务器的连接
+  // TODO 心跳机制自动重连
   disconnect = () => {
     if (this.conneted === true) {
       this.ws.close(1000, '溜了溜了，下线');

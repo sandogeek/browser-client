@@ -57,6 +57,7 @@ export class LoginComponent implements OnInit {
   }
   disconnect = () => {
     this.wsService.disconnect();
+    // this.unsubscribe();
   }
 
   // 移除观察者
