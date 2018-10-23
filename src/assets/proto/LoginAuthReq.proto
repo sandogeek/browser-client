@@ -1,4 +1,0 @@
-message LoginAuthReq{
-    required string account=1;
-    required string password=2;
-}
