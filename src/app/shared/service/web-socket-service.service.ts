@@ -1,22 +1,27 @@
-import { Injectable } from '@angular/core';
-import { Observable, Subscriber, Subscription, Unsubscribable } from 'rxjs';
+import { Injectable, Type } from '@angular/core';
+import { Observable, Subscriber, Subject, ConnectableObservable } from 'rxjs';
 import { WsPacket } from '../model/packet/WsPacket';
 import { PacketId } from '../model/packet/PacketId';
 
-export class MyUnsubscribable implements Unsubscribable {
-  outer: WebSocketService;
-  unsubscribe: () => void;
+// export class MyUnsubscribable implements Unsubscribable {
+//   outer: WebSocketService;
+//   unsubscribe: () => void;
+// }
+export class CustomMessage {
+  packetId: number;
+  clazz : Type<any>;
+  resp: any;
 }
 @Injectable({
   providedIn: 'root'
 })
 export class WebSocketService {
   ws: WebSocket;
-  observable: Observable<any>;
+  observable: Observable<CustomMessage>;
   conneted = false;
 
-  subscribers: Array<Subscriber<any>> = [];
-  myUnsubscribables: Array<MyUnsubscribable> = [];
+  // subscribers: Array<Subscriber<any>> = [];
+  // myUnsubscribables: Array<MyUnsubscribable> = [];
   constructor() {
   }
 
@@ -27,49 +32,62 @@ export class WebSocketService {
       this.ws = new WebSocket(url);
       // 设定发送的数据为二进制数据
       this.ws.binaryType = 'arraybuffer';
-      this.observable = new Observable<any>(this.onSubscribe);
+      let subject = new Subject<CustomMessage>();
+      let connectObservable = new ConnectableObservable<CustomMessage>(new Observable(this.onSubscribe),() => {
+        return subject;
+      });
+      this.observable = connectObservable.refCount();
     }
   }
   // 当this.observable被.subscribe(x)调用,subscriber = x
-  onSubscribe = (subscriber: Subscriber<any>) => {
+  onSubscribe = (subscriber: Subscriber<CustomMessage>) => {
     // 添加观察者，因为使用的是循环subscribers,调用每个next，所以他们是同步的，如果前一个next发生耗时操作，会导致
     // 后一个订阅者无法及时接收到消息，可能导致问题，最好让每个观察者中的next error complete变成异步执行
-    console.log(this);
-    this.subscribers.push(subscriber);
+    // console.log(this);
+
     // console.log(this.subscribers.length);
     // Websocket生命周期回调函数只绑定一次就够了
-    if (this.subscribers.length === 1) {
+    if (this.conneted === false) {
       this.bindWsLifecircle(subscriber);
     }
-    const myUnsubscribable = new MyUnsubscribable();
-    myUnsubscribable.outer = this;
-    // 同时需要外部的this,以及调用这个函数的this怎么解决
-    // 把外部的this当作对象的属性传进去
-    myUnsubscribable.unsubscribe = function(this: MyUnsubscribable) {
-      // console.log(this);
-      // 移除对应的MyUnsubscribable
-      const index = this.outer.myUnsubscribables.indexOf(this);
-      // console.log(index);
-      // console.log(this.outer.myUnsubscribables);
-      if (index > -1) {
-        this.outer.myUnsubscribables.splice(index, 1);
+    // const myUnsubscribable = new MyUnsubscribable();
+    // myUnsubscribable.outer = this;
+    // // 同时需要外部的this,以及调用这个函数的this怎么解决
+    // // 把外部的this当作对象的属性传进去
+    // myUnsubscribable.unsubscribe = function(this: MyUnsubscribable) {
+    //   // console.log(this);
+    //   // 移除对应的MyUnsubscribable
+    //   const index = this.outer.myUnsubscribables.indexOf(this);
+    //   // console.log(index);
+    //   // console.log(this.outer.myUnsubscribables);
+    //   if (index > -1) {
+    //     this.outer.myUnsubscribables.splice(index, 1);
+    //   }
+    //   // console.log(this.outer.myUnsubscribables);
+    // };
+    // this.myUnsubscribables.push(myUnsubscribable);
+    return {
+      unsubscribe : () => {
+        console.log(`取消订阅`)
       }
-      // console.log(this.outer.myUnsubscribables);
     };
-    this.myUnsubscribables.push(myUnsubscribable);
-    return myUnsubscribable;
   }
   /**
    * 绑定websocket生命周期回调函数
    */
-  private bindWsLifecircle = (subscriber: Subscriber<any>) => {
+  private bindWsLifecircle = (subscriber: Subscriber<CustomMessage>) => {
     this.ws.onopen = (event) => {
       // console.log(`进来了`);
       this.conneted = true;
       // 此处会触发x.next回调函数
-      this.subscribers.forEach((value, index, subscribers) => {
-          value.next('连接到服务器成功');
+      subscriber.next({
+        packetId : 0,
+        clazz : null,
+        resp : "连接到服务器成功"
       });
+      // this.subscribers.forEach((value, index, subscribers) => {
+      //     value.next('连接到服务器成功');
+      // });
     };
     // 接收响应消息时回调
     this.ws.onmessage = (event) => {
@@ -77,7 +95,7 @@ export class WebSocketService {
       // console.log(`实际接收的数据：${Array.prototype.map.call(new Uint8Array(event.data), x => x.toString(10)).join(',')}`);
       // 把event.data转化为相应的类对象
       if (event.data as ArrayBuffer) {
-        this.decodeWebSocketBinaryFrameAndNext(event);
+        this.decodeWebSocketBinaryFrameAndNext(subscriber,event);
       }
     };
     this.ws.onerror = (event) => subscriber.error(event);
@@ -89,7 +107,7 @@ export class WebSocketService {
   /**
    * 解码服务器发过来的WebSocketBinaryFrame
    */
-  private decodeWebSocketBinaryFrameAndNext = (event: MessageEvent) => {
+  private decodeWebSocketBinaryFrameAndNext = (subscriber: Subscriber<any>,event: MessageEvent) => {
     /**
      * 0-3 包长 4-5 packetId 6-最后 probuf编码的对象
      */
@@ -108,14 +126,14 @@ export class WebSocketService {
     }
     const obj = messageClass.decode(data);
     // console.log(`接收到的包：packetId[${packetId}] 类名[${messageClass.name}] 内容\n${JSON.stringify(obj)}`);
-    this.subscribers.forEach((value, index, subscribers) => {
-      const nextData = {
-        packetId: packetId,
-        clazz : messageClass,
-        resp: obj
-      };
-      value.next(nextData);
-    });
+    // this.subscribers.forEach((value, index, subscribers) => {
+    const nextData = {
+      packetId: packetId,
+      clazz : messageClass,
+      resp: obj
+    };
+    subscriber.next(nextData);
+    // });
   }
   // 正常地断开与服务器的连接
   // TODO 心跳机制自动重连
