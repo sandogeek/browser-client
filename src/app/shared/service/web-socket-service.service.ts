@@ -9,7 +9,7 @@ import { PacketId } from '../model/packet/PacketId';
 // }
 export class CustomMessage {
   packetId: number;
-  clazz : Type<any>;
+  clazz: Type<any>;
   resp: any;
 }
 @Injectable({
@@ -32,8 +32,8 @@ export class WebSocketService {
       this.ws = new WebSocket(url);
       // 设定发送的数据为二进制数据
       this.ws.binaryType = 'arraybuffer';
-      let subject = new Subject<CustomMessage>();
-      let connectObservable = new ConnectableObservable<CustomMessage>(new Observable(this.onSubscribe),() => {
+      const subject = new Subject<CustomMessage>();
+      const connectObservable = new ConnectableObservable<CustomMessage>(new Observable(this.onSubscribe), () => {
         return subject;
       });
       this.observable = connectObservable.refCount();
@@ -68,7 +68,7 @@ export class WebSocketService {
     // this.myUnsubscribables.push(myUnsubscribable);
     return {
       unsubscribe : () => {
-        console.log(`取消订阅`)
+        console.log(`取消订阅`);
       }
     };
   }
@@ -83,7 +83,7 @@ export class WebSocketService {
       subscriber.next({
         packetId : 0,
         clazz : null,
-        resp : "连接到服务器成功"
+        resp : '连接到服务器成功'
       });
       // this.subscribers.forEach((value, index, subscribers) => {
       //     value.next('连接到服务器成功');
@@ -95,7 +95,7 @@ export class WebSocketService {
       // console.log(`实际接收的数据：${Array.prototype.map.call(new Uint8Array(event.data), x => x.toString(10)).join(',')}`);
       // 把event.data转化为相应的类对象
       if (event.data as ArrayBuffer) {
-        this.decodeWebSocketBinaryFrameAndNext(subscriber,event);
+        this.decodeWebSocketBinaryFrameAndNext(subscriber, event);
       }
     };
     this.ws.onerror = (event) => subscriber.error(event);
@@ -107,7 +107,7 @@ export class WebSocketService {
   /**
    * 解码服务器发过来的WebSocketBinaryFrame
    */
-  private decodeWebSocketBinaryFrameAndNext = (subscriber: Subscriber<any>,event: MessageEvent) => {
+  private decodeWebSocketBinaryFrameAndNext = (subscriber: Subscriber<any>, event: MessageEvent) => {
     /**
      * 0-3 包长 4-5 packetId 6-最后 probuf编码的对象
      */
@@ -143,12 +143,12 @@ export class WebSocketService {
     }
   }
   // 向服务器端发送消息
-  sendPacket(messageClass: any, obj: any): void {
+  sendPacket = (messageClass: any, obj: any): void => {
     // TODO 把message转换为ReqPacket
     // 获取请求包packetId
     const id = PacketId.class2PacketId.get(messageClass);
     // 参数校验
-    if (messageClass.verify(obj) != null) {
+    if (messageClass.verify(obj) !== null) {
       console.log(`传入参数${JSON.stringify(obj)}异常,必备字段不完整或不是${messageClass.name}对象`);
       return;
     }
