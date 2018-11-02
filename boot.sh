@@ -22,10 +22,15 @@ else
     mkdir proto
     cd ./proto
 fi
-pbjs -t static-module -w commonjs -o bundle.js ../../../../assets/proto/*.proto
-pbts -o bundle.d.ts bundle.js
+cd ..
+cd ..
+cd ..
+cd ..
+cd ..
+./node_modules/protobufjs/bin/pbjs -t static-module -w commonjs -o ./src/app/shared/model/proto/bundle.js ./src/assets/proto/*.proto
+./node_modules/protobufjs/bin/pbts -o ./src/app/shared/model/proto/bundle.d.ts ./src/app/shared/model/proto/bundle.js
 echo 已在目录$(dirname $(readlink -f "$0"))下生成：
-ls
+ls ./src/app/shared/model/proto/
 ng s
 cd /C/Users/sando/AppData/Local/Google/Chrome/Application
 ./chrome http://localhost:4200 --remote-debugging-port=8989

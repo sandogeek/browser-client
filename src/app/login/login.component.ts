@@ -99,7 +99,7 @@ export class LoginComponent implements OnInit {
       return;
     }
     // const loginAuthReq = LoginAuthReq.create();
-    setInterval(this.wsService.sendPacket, 500, LoginAuthReq, {account: this.account, password: this.password});
+    setInterval(this.wsService.sendPacket, 100, LoginAuthReq, {account: this.account, password: this.password});
     // while (1) {
     //   this.sleep(10000);
     //   this.wsService.sendPacket(LoginAuthReq, {account: this.account, password: this.password});
