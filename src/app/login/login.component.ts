@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
   ) {
     this.address = 'localhost';
     this.state = 2;
-    this.port = 8088;
+    this.port = 8090;
     this.subdir = '';
     // this.connected = this.wsService.conneted;
   }
@@ -99,18 +99,13 @@ export class LoginComponent implements OnInit {
       return;
     }
     // const loginAuthReq = LoginAuthReq.create();
-    setInterval(this.wsService.sendPacket, 100, LoginAuthReq, {account: this.account, password: this.password});
+    // const timer = setInterval(this.wsService.sendPacket, 100, LoginAuthReq, {account: this.account, password: this.password});
+    // setTimeout(() => {clearInterval(timer); } , 1000);
     // while (1) {
     //   this.sleep(10000);
-    //   this.wsService.sendPacket(LoginAuthReq, {account: this.account, password: this.password});
+    this.wsService.sendPacket(LoginAuthReq, {account: this.account, password: this.password});
     // }
     // this.wsService.sendPacket(LoginAuthReq, {account: this.account, password: this.password});
     this.hint = undefined;
-  }
-  sleep(d) {
-    for (const t = Date.now(); Date.now() - t <= d;) {
-      console.log(t);
-      return;
-    }
   }
 }

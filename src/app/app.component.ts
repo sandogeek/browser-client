@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   constructor(
     private websocketService: WebSocketService,
     // facade单例生成
-    private loginFacade: LoginFacade
+    // private loginFacade: LoginFacade
     ) {
       // 初始化PacketId以完成PacketId中的map的初始化
       const packetId = new PacketId();

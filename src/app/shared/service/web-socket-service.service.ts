@@ -2,6 +2,8 @@ import { Injectable, Type } from '@angular/core';
 import { Observable, Subscriber, Subject, ConnectableObservable } from 'rxjs';
 import { WsPacket } from '../model/packet/WsPacket';
 import { PacketId } from '../model/packet/PacketId';
+import { PingHeartBeat, PongHeartBeat } from '../model/proto/bundle';
+import { IPacket } from '../model/proto/IPacket';
 
 // export class MyUnsubscribable implements Unsubscribable {
 //   outer: WebSocketService;
@@ -19,6 +21,7 @@ export class WebSocketService {
   ws: WebSocket;
   observable: Observable<CustomMessage>;
   conneted = false;
+  private timer: NodeJS.Timer;
 
   // subscribers: Array<Subscriber<any>> = [];
   // myUnsubscribables: Array<MyUnsubscribable> = [];
@@ -91,6 +94,7 @@ export class WebSocketService {
     };
     // 接收响应消息时回调
     this.ws.onmessage = (event) => {
+      this.keepAlive();
       // 查看收发数据是否一致
       // console.log(`实际接收的数据：${Array.prototype.map.call(new Uint8Array(event.data), x => x.toString(10)).join(',')}`);
       // 把event.data转化为相应的类对象
@@ -101,6 +105,9 @@ export class WebSocketService {
     this.ws.onerror = (event) => subscriber.error(event);
     this.ws.onclose = (event) => {
       this.conneted = false;
+      if (this.timer !== undefined) {
+        clearTimeout(this.timer);
+      }
       subscriber.complete();
     };
   }
@@ -121,6 +128,9 @@ export class WebSocketService {
       return;
     }
     const messageClass = PacketId.packetId2Class.get(packetId);
+    // if ( messageClass.name === PongHeartBeat.name) {
+
+    // }
     if (messageClass === undefined) {
       console.error(`PacketId中不存在id为${packetId}的包`);
     }
@@ -143,7 +153,7 @@ export class WebSocketService {
     }
   }
   // 向服务器端发送消息
-  sendPacket = (messageClass: any, obj: any): void => {
+  sendPacket = (messageClass: IPacket, obj: any): void => {
     // TODO 把message转换为ReqPacket
     // 获取请求包packetId
     const id = PacketId.class2PacketId.get(messageClass);
@@ -159,5 +169,16 @@ export class WebSocketService {
     const sendData = reqPacket.getBuffer();
     // console.log(`实际发送的数据：${Array.prototype.map.call(new Uint8Array(sendData), x => x.toString(10)).join(',')}`);
     this.ws.send(sendData);
+  }
+  private keepAlive = () => {
+    // 心跳,5秒没有收到消息，自动发送ping包保活
+    if (this.timer !== undefined) {
+      clearTimeout(this.timer);
+    }
+    this.timer = setTimeout((timer) => {
+      console.log(`ping包保活`);
+      this.sendPacket(PingHeartBeat, {});
+      // this.keepAlive();
+    }, 29000, this.timer);
   }
 }
