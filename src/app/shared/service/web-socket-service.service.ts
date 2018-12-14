@@ -11,8 +11,26 @@ import { IPacket } from '../model/proto/IPacket';
 // }
 export class CustomMessage {
   packetId: number;
-  clazz: Type<any>;
+  clazz: IPacket;
   resp: any;
+}
+export enum GameState {
+  /**
+   * 未连接
+   */
+  UNCONNECTED,
+  /**
+   * 已连接
+   */
+  CONNECTED,
+  /**
+   * 已登陆但还没进入游戏（正在选择角色）
+   */
+  LOGINED,
+  /**
+   * 游戏中
+   */
+  GAMING
 }
 @Injectable({
   providedIn: 'root'
@@ -20,7 +38,7 @@ export class CustomMessage {
 export class WebSocketService {
   ws: WebSocket;
   observable: Observable<CustomMessage>;
-  conneted = false;
+  state: GameState = GameState.UNCONNECTED;
   private timer: NodeJS.Timer;
 
   // subscribers: Array<Subscriber<any>> = [];
@@ -30,7 +48,7 @@ export class WebSocketService {
 
   // 连接服务器，初始化一个可观察者（消息源）
   createObservableSocket = (url: string) => {
-    if (this.conneted === false) {
+    if (this.state === GameState.UNCONNECTED) {
       // 连接服务器
       this.ws = new WebSocket(url);
       // 设定发送的数据为二进制数据
@@ -46,11 +64,9 @@ export class WebSocketService {
   onSubscribe = (subscriber: Subscriber<CustomMessage>) => {
     // 添加观察者，因为使用的是循环subscribers,调用每个next，所以他们是同步的，如果前一个next发生耗时操作，会导致
     // 后一个订阅者无法及时接收到消息，可能导致问题，最好让每个观察者中的next error complete变成异步执行
-    // console.log(this);
 
-    // console.log(this.subscribers.length);
     // Websocket生命周期回调函数只绑定一次就够了
-    if (this.conneted === false) {
+    if (this.state === GameState.UNCONNECTED) {
       this.bindWsLifecircle(subscriber);
     }
     // const myUnsubscribable = new MyUnsubscribable();
@@ -81,7 +97,7 @@ export class WebSocketService {
   private bindWsLifecircle = (subscriber: Subscriber<CustomMessage>) => {
     this.ws.onopen = (event) => {
       // console.log(`进来了`);
-      this.conneted = true;
+      this.state = GameState.CONNECTED;
       // 此处会触发x.next回调函数
       subscriber.next({
         packetId : 0,
@@ -94,7 +110,6 @@ export class WebSocketService {
     };
     // 接收响应消息时回调
     this.ws.onmessage = (event) => {
-      this.keepAlive();
       // 查看收发数据是否一致
       // console.log(`实际接收的数据：${Array.prototype.map.call(new Uint8Array(event.data), x => x.toString(10)).join(',')}`);
       // 把event.data转化为相应的类对象
@@ -104,7 +119,7 @@ export class WebSocketService {
     };
     this.ws.onerror = (event) => subscriber.error(event);
     this.ws.onclose = (event) => {
-      this.conneted = false;
+      this.state = GameState.UNCONNECTED;
       if (this.timer !== undefined) {
         clearTimeout(this.timer);
       }
@@ -114,7 +129,7 @@ export class WebSocketService {
   /**
    * 解码服务器发过来的WebSocketBinaryFrame
    */
-  private decodeWebSocketBinaryFrameAndNext = (subscriber: Subscriber<any>, event: MessageEvent) => {
+  private decodeWebSocketBinaryFrameAndNext = (subscriber: Subscriber<CustomMessage>, event: MessageEvent) => {
     /**
      * 0-3 包长 4-5 packetId 6-最后 probuf编码的对象
      */
@@ -146,15 +161,16 @@ export class WebSocketService {
     // });
   }
   // 正常地断开与服务器的连接
-  // TODO 心跳机制自动重连
   disconnect = () => {
-    if (this.conneted === true) {
+    if (this.state === GameState.CONNECTED) {
       this.ws.close(1000, '溜了溜了，下线');
     }
   }
   // 向服务器端发送消息
   sendPacket = (messageClass: IPacket, obj: any): void => {
-    // TODO 把message转换为ReqPacket
+    if (messageClass !== PingHeartBeat) {
+      this.resetTimeout();
+    }
     // 获取请求包packetId
     const id = PacketId.class2PacketId.get(messageClass);
     // 参数校验
@@ -162,7 +178,9 @@ export class WebSocketService {
       console.log(`传入参数${JSON.stringify(obj)}异常,必备字段不完整或不是${messageClass.name}对象`);
       return;
     }
-    console.log(`发送请求包：packetId[${id}] 类名[${messageClass.name}] 内容\n${JSON.stringify(obj)}`);
+    if (messageClass.name !== 'PingHeartBeat') {
+      console.log(`发送请求包：packetId[${id}] 类名[${messageClass.name}] 内容\n${JSON.stringify(obj)}`);
+    }
     const messageUint8Array = messageClass.encode(obj).finish();
     // console.log(`messageUint8Array = ${Array.prototype.toString.call(messageUint8Array)}`);
     const reqPacket = WsPacket.valueOf(id, messageUint8Array);
@@ -170,15 +188,17 @@ export class WebSocketService {
     // console.log(`实际发送的数据：${Array.prototype.map.call(new Uint8Array(sendData), x => x.toString(10)).join(',')}`);
     this.ws.send(sendData);
   }
-  private keepAlive = () => {
-    // 心跳,5秒没有收到消息，自动发送ping包保活
+  private resetTimeout = () => {
+    // 每次发普通包，重置发送ping包时间。
     if (this.timer !== undefined) {
       clearTimeout(this.timer);
     }
-    this.timer = setTimeout((timer) => {
-      console.log(`ping包保活`);
+    this.timeoutLoop();
+  }
+  private timeoutLoop() {
+    this.timer = setTimeout(() => {
       this.sendPacket(PingHeartBeat, {});
-      // this.keepAlive();
-    }, 29000, this.timer);
+      this.timeoutLoop();
+    }, 25000);
   }
 }

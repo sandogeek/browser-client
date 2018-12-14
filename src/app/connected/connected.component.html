@@ -1,0 +1,4 @@
+<p><button (click)='chooseLogin()'>登录界面</button><button (click)='chooseRegister()'>注册界面</button></p>
+<app-login *ngIf = 'showLoginComponent'></app-login>
+<app-register *ngIf ='showRegisterComponent'></app-register>
+<button (click)="disconnect()" >断开连接</button>

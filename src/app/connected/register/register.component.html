@@ -1,0 +1,16 @@
+<p>{{hint}}</p>
+<form (submit)="register()" method="post">
+  <p>
+    <label for="account">帐号：</label>
+    <input name="account" placeholder="帐号" type="text" [(ngModel)]="account">
+  </p>
+  <p>
+    <label for="account">密码：</label>
+    <input name="password" placeholder="密码" type="password" [(ngModel)]="passwordFirst">
+  </p>
+  <p>
+    <label for="account">再次输入密码：</label>
+    <input name="password" placeholder="密码" type="password" [(ngModel)]="passwordSecond">
+  </p>
+  <button type="submit">注册</button>
+</form>

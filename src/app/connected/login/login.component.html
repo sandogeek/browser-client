@@ -1,0 +1,12 @@
+<p>{{hint}}</p>
+<form (submit)="login()" method="post">
+    <p>
+      <label for="account">帐号：</label>
+      <input name="account" placeholder="帐号" type="text" [(ngModel)]="account">
+    </p>
+    <p>
+      <label for="account">密码：</label>
+      <input name="password" placeholder="密码" type="password" [(ngModel)]="password">
+    </p>
+    <button type="submit">登陆</button>
+</form>
