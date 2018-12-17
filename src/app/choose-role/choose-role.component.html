@@ -5,3 +5,21 @@
       <p>角色类型：{{role.roleTypeName}}</p>
   </li>
 </ul>
+<div *ngIf = 'roleSizeLess3'>
+  <p>添加角色:</p>
+  <p>{{hint}}</p>
+  <form method="post" (ngSubmit)="addRole()">
+    <mat-form-field >
+      <input matInput name = "name" placeholder="昵称：" [(ngModel)] = "name" required>
+    </mat-form-field>
+    <mat-form-field >
+      <mat-select [(ngModel)] = "roleTypeSelect" placeholder="角色类型" name = "roleTypeSelect">
+        <mat-option *ngFor ="let roleTypeName of roleTypeNames" [value]="getEnumName(roleTypeName)">{{roleTypeName}}</mat-option>
+        <!-- <mat-option value ="primary" >{{roleType}}</mat-option> -->
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button type="submit">添加</button>
+  </form>
+
+</div>
+

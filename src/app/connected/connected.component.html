@@ -1,4 +1,8 @@
-<p><button (click)='chooseLogin()'>登录界面</button><button (click)='chooseRegister()'>注册界面</button></p>
+<mat-tab-group>
+  <mat-tab label="登陆"> <app-login></app-login> </mat-tab>
+  <mat-tab label="注册"> <app-register></app-register> </mat-tab>
+</mat-tab-group>
+<!-- <p><button (click)='chooseLogin()'>登录界面</button><button (click)='chooseRegister()'>注册界面</button></p>
 <app-login *ngIf = 'showLoginComponent'></app-login>
-<app-register *ngIf ='showRegisterComponent'></app-register>
-<button (click)="disconnect()" >断开连接</button>
+<app-register *ngIf ='showRegisterComponent'></app-register> -->
+<button mat-raised-button (click)="disconnect()" >断开连接</button>

@@ -1,5 +1,5 @@
 
-import { ChatReq, ChatResp, LoginAuthReq, LoginResultResp, RegisterReq, RegisterResp, GetRoleListReq, PingHeartBeat, PongHeartBeat } from '../proto/bundle';
+import { ChatReq, ChatResp, LoginAuthReq, LoginResultResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, GetRoleListReq, GetRoleListResp, PingHeartBeat, PongHeartBeat } from '../proto/bundle';
 import { Type } from '@angular/core';
 import { Reader, Writer } from 'protobufjs';
 import { IPacket } from '../proto/IPacket';
@@ -27,8 +27,14 @@ export class PacketId {
     static readonly REGISTER_REQ: number = 10201;
     /** 注册响应包*/
     static readonly REGISTER_RESP: number = 10202;
+    /** 添加角色请求*/
+    static readonly ADD_ROLE_REQ: number = 10303;
+    /** 添加角色响应*/
+    static readonly ADD_ROLE_RESP: number = 10304;
     /** 获取角色列表请求*/
     static readonly GET_ROLE_LIST_REQ: number = 10301;
+    /** 获取角色列表响应*/
+    static readonly GET_ROLE_LIST_RESP: number = 10302;
     /** ping心跳包*/
     static readonly PING_HEART_BEAT: number = 1001;
     /** pong心跳包*/
@@ -43,7 +49,10 @@ export class PacketId {
         PacketId.put(PacketId.LOGIN_RESULT_RESP, LoginResultResp);
         PacketId.put(PacketId.REGISTER_REQ, RegisterReq);
         PacketId.put(PacketId.REGISTER_RESP, RegisterResp);
+        PacketId.put(PacketId.ADD_ROLE_REQ, AddRoleReq);
+        PacketId.put(PacketId.ADD_ROLE_RESP, AddRoleResp);
         PacketId.put(PacketId.GET_ROLE_LIST_REQ, GetRoleListReq);
+        PacketId.put(PacketId.GET_ROLE_LIST_RESP, GetRoleListResp);
         PacketId.put(PacketId.PING_HEART_BEAT, PingHeartBeat);
         PacketId.put(PacketId.PONG_HEART_BEAT, PongHeartBeat);
         // end

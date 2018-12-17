@@ -14,9 +14,16 @@ export class Role {
      */
     level: number;
 
+    static init() {
+    }
+
     get roleTypeName() {
+        return Role.getRoleTypeNameByType(this.roleType);
+    }
+
+    static getRoleTypeNameByType(roleType: RoleType) {
         let roleTypeName: string;
-        switch (this.roleType) {
+        switch (roleType) {
             case RoleType.ELF : {
                 roleTypeName = '精灵';
                 break;
@@ -34,3 +41,4 @@ export class Role {
         return roleTypeName;
     }
 }
+Role.init();

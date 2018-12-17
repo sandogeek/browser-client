@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { ConnectComponent } from './connect/connect.component';
@@ -10,6 +10,9 @@ import { RegisterComponent } from './connected/register/register.component';
 import { ConnectAuthGuard } from './auth/connect-auth.guard';
 import { ChooseRoleComponent } from './choose-role/choose-role.component';
 import { ChooseRoleGuard } from './auth/choose-role.guard';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { MaterialModule } from './material/material.module';
+import { UiTestComponent } from './ui-test/ui-test.component';
 
 const appRoutes: Routes = [
   // { path: 'crisis-center', component: CrisisListComponent },
@@ -40,7 +43,8 @@ const appRoutes: Routes = [
     ConnectComponent,
     RegisterComponent,
     ConnectedComponent,
-    ChooseRoleComponent
+    ChooseRoleComponent,
+    UiTestComponent,
   ],
   imports: [
     RouterModule.forRoot(
@@ -48,7 +52,10 @@ const appRoutes: Routes = [
       { enableTracing: false } // <-- debugging purposes only
     ),
     BrowserModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,7 +1,7 @@
 
 <div *ngIf="!wsService.connected">
-  <input name="address" placeholder="地址" type="text" [(ngModel)]="address">
-  <input name="port" placeholder="端口号" type="text" [(ngModel)]="port">
-  <input name="subdir" placeholder="子目录，可以为空" type="text" [(ngModel)]="subdir">
-  <button (click)="connect()">连接到服务器</button>
+  <mat-form-field ><input matInput name="address" placeholder="地址" type="text" [(ngModel)]="address"></mat-form-field>
+  <mat-form-field ><input matInput name="port" placeholder="端口号" type="text" [(ngModel)]="port"></mat-form-field>
+  <mat-form-field ><input matInput name="subdir" placeholder="子目录，可以为空" type="text" [(ngModel)]="subdir"></mat-form-field>
+  <button mat-raised-button (click)="connect()">连接到服务器</button>
 </div>

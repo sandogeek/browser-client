@@ -1,16 +1,7 @@
 <p>{{hint}}</p>
 <form (submit)="register()" method="post">
-  <p>
-    <label for="account">帐号：</label>
-    <input name="account" placeholder="帐号" type="text" [(ngModel)]="account">
-  </p>
-  <p>
-    <label for="account">密码：</label>
-    <input name="password" placeholder="密码" type="password" [(ngModel)]="passwordFirst">
-  </p>
-  <p>
-    <label for="account">再次输入密码：</label>
-    <input name="password" placeholder="密码" type="password" [(ngModel)]="passwordSecond">
-  </p>
-  <button type="submit">注册</button>
+  <p><mat-form-field ><input matInput name="account" placeholder="帐号" type="text" [(ngModel)]="account"></mat-form-field></p>
+  <p><mat-form-field ><input matInput name="password" placeholder="密码" type="password" [(ngModel)]="passwordFirst"></mat-form-field></p>
+  <p><mat-form-field ><input matInput name="password" placeholder="再次输入密码" type="password" [(ngModel)]="passwordSecond"></mat-form-field></p>
+  <button mat-raised-button type="submit">注册</button>
 </form>
