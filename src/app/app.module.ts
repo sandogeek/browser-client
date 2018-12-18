@@ -13,6 +13,7 @@ import { ChooseRoleGuard } from './auth/choose-role.guard';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { UiTestComponent } from './ui-test/ui-test.component';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
 
 const appRoutes: Routes = [
   // { path: 'crisis-center', component: CrisisListComponent },
@@ -57,7 +58,9 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     MaterialModule
   ],
-  providers: [],
+  providers: [
+    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2000, horizontalPosition: 'center', verticalPosition: 'top'}}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

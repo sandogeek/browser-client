@@ -143,9 +143,6 @@ export class WebSocketService {
       return;
     }
     const messageClass = PacketId.packetId2Class.get(packetId);
-    // if ( messageClass.name === PongHeartBeat.name) {
-
-    // }
     if (messageClass === undefined) {
       console.error(`PacketId中不存在id为${packetId}的包`);
     }
@@ -168,9 +165,9 @@ export class WebSocketService {
   }
   // 向服务器端发送消息
   sendPacket = (messageClass: IPacket, obj: any): void => {
-    if (messageClass !== PingHeartBeat) {
-      this.resetTimeout();
-    }
+    // if (messageClass !== PingHeartBeat) {
+    //   this.resetTimeout();
+    // }
     // 获取请求包packetId
     const id = PacketId.class2PacketId.get(messageClass);
     // 参数校验

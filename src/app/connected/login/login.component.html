@@ -1,6 +1,13 @@
 <p>{{hint}}</p>
-<form (submit)="login()" method="post">
-    <mat-form-field ><input matInput name="account" placeholder="帐号" type="text" [(ngModel)]="account"></mat-form-field>
-    <mat-form-field ><input matInput name="password" placeholder="密码" type="password" [(ngModel)]="password"></mat-form-field>
-    <button mat-raised-button type="submit">登陆</button>
+<form (ngSubmit)="login()" method="post" [formGroup]="loginForm">
+    <mat-form-field >
+        <input matInput name="account" formControlName="account" placeholder="帐号" type="text" required>
+        <mat-error *ngIf="loginForm.get('account').hasError('required')">账号不能为空</mat-error>
+    </mat-form-field>
+    <mat-form-field >
+        <input matInput name="password" formControlName="password" placeholder="密码" [type]="hide ? 'password' : 'text'" required>
+        <mat-error *ngIf="loginForm.get('password').hasError('required')">密码不能为空</mat-error>
+        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </mat-form-field>
+    <button [disabled]="!loginForm.valid" mat-raised-button type="submit">登陆</button>
 </form>

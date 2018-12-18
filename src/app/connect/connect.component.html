@@ -2,6 +2,9 @@
 <div *ngIf="!wsService.connected">
   <mat-form-field ><input matInput name="address" placeholder="地址" type="text" [(ngModel)]="address"></mat-form-field>
   <mat-form-field ><input matInput name="port" placeholder="端口号" type="text" [(ngModel)]="port"></mat-form-field>
-  <mat-form-field ><input matInput name="subdir" placeholder="子目录，可以为空" type="text" [(ngModel)]="subdir"></mat-form-field>
+  <mat-form-field >
+    <input matInput name="subdir" placeholder="子目录" type="text" [(ngModel)]="subdir">
+    <mat-hint>可以为空</mat-hint>
+  </mat-form-field>
   <button mat-raised-button (click)="connect()">连接到服务器</button>
 </div>
