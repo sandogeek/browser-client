@@ -1,5 +1,5 @@
 
-import { ChatReq, ChatResp, LoginAuthReq, LoginResultResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, GetRoleListReq, GetRoleListResp, PingHeartBeat, PongHeartBeat } from '../proto/bundle';
+import { ChatReq, ChatResp, LoginAuthReq, LoginResultResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, PingHeartBeat, PongHeartBeat } from '../proto/bundle';
 import { Type } from '@angular/core';
 import { Reader, Writer } from 'protobufjs';
 import { IPacket } from '../proto/IPacket';
@@ -31,6 +31,14 @@ export class PacketId {
     static readonly ADD_ROLE_REQ: number = 10303;
     /** 添加角色响应*/
     static readonly ADD_ROLE_RESP: number = 10304;
+    /** 选择角色请求*/
+    static readonly CHOOSE_ROLE_REQ: number = 10307;
+    /** 选择角色响应*/
+    static readonly CHOOSE_ROLE_RESP: number = 10308;
+    /** 删除角色请求*/
+    static readonly DELETE_ROLE_REQ: number = 10305;
+    /** 删除角色响应*/
+    static readonly DELETE_ROLE_RESP: number = 10306;
     /** 获取角色列表请求*/
     static readonly GET_ROLE_LIST_REQ: number = 10301;
     /** 获取角色列表响应*/
@@ -51,6 +59,10 @@ export class PacketId {
         PacketId.put(PacketId.REGISTER_RESP, RegisterResp);
         PacketId.put(PacketId.ADD_ROLE_REQ, AddRoleReq);
         PacketId.put(PacketId.ADD_ROLE_RESP, AddRoleResp);
+        PacketId.put(PacketId.CHOOSE_ROLE_REQ, ChooseRoleReq);
+        PacketId.put(PacketId.CHOOSE_ROLE_RESP, ChooseRoleResp);
+        PacketId.put(PacketId.DELETE_ROLE_REQ, DeleteRoleReq);
+        PacketId.put(PacketId.DELETE_ROLE_RESP, DeleteRoleResp);
         PacketId.put(PacketId.GET_ROLE_LIST_REQ, GetRoleListReq);
         PacketId.put(PacketId.GET_ROLE_LIST_RESP, GetRoleListResp);
         PacketId.put(PacketId.PING_HEART_BEAT, PingHeartBeat);

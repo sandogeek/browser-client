@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Role } from './model/Role';
-import { RoleType, GetRoleListReq, GetRoleListResp, AddRoleReq, AddRoleResp } from '../shared/model/proto/bundle';
+import { RoleType, GetRoleListReq, GetRoleListResp,
+  AddRoleReq, AddRoleResp, DeleteRoleResp, DeleteRoleReq } from '../shared/model/proto/bundle';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { WebSocketService, CustomMessage } from '../shared/service/web-socket-service.service';
 import { PartialObserver } from 'rxjs';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatTable } from '@angular/material';
 
 @Component({
   selector: 'app-choose-role',
@@ -23,48 +24,77 @@ export class ChooseRoleComponent implements OnInit {
   roleTypeNames: Array<string> = new Array();
 
   columnsToDisplay = ['roleName', 'roleType' , 'roleLevel', 'function'];
+  @ViewChild('roleTable') table: MatTable<Role>;
 
+  roleListObserver: PartialObserver<CustomMessage> = {
+    next : message => {
+      if (message.clazz === GetRoleListResp ) {
+        this.roles = new Array();
+        (<GetRoleListResp>message.resp).roleInfoList.forEach(v => {
+          const role = new Role();
+          role.name = v.name;
+          role.level = v.level;
+          role.roleType = v.roleType;
+          this.roles.push(role);
+        });
+      }
+    },
+    error: err => console.log(err),
+    complete: () => {
+    }
+  };
+  addRoleObserver: PartialObserver<CustomMessage> = {
+    next : message => {
+      if (message.clazz === AddRoleResp) {
+        const addRoleResp = <AddRoleResp>message.resp;
+        if (addRoleResp.result) {
+          const role = new Role();
+          role.name = addRoleResp.roleInfo.name;
+          role.level = addRoleResp.roleInfo.level;
+          role.roleType = addRoleResp.roleInfo.roleType;
+          this.roles.push(role);
+          this.table.renderRows();
+        } else {
+          this.snackBar.open('角色昵称重复，请更换其它昵称');
+        }
+      }
+    },
+    error: err => console.log(err),
+    complete: () => {
+    }
+  };
+  deleteRoleObserver: PartialObserver<CustomMessage> = {
+    next : message => {
+      if (message.clazz === DeleteRoleResp) {
+        const deleteRoleResp = <DeleteRoleResp>message.resp;
+        if (deleteRoleResp.result) {
+          this.roles.some((role, index, roles) => {
+            if (role.name === deleteRoleResp.nameDelete) {
+              roles.splice(index, 1);
+              return true;
+            }
+            return false;
+          });
+          this.table.renderRows();
+        } else {
+          this.snackBar.open('角色删除失败');
+        }
+      }
+    },
+    error: err => console.log(err),
+    complete: () => {
+    }
+  };
 
   constructor(
     private wsService: WebSocketService,
     private snackBar: MatSnackBar,
     private fb: FormBuilder
   ) {
-    const observer: PartialObserver<CustomMessage> = {
-      next : message => {
-        if (message.clazz === GetRoleListResp ) {
-          this.roles = new Array();
-          (<GetRoleListResp>message.resp).roleInfoList.forEach(v => {
-            const role = new Role();
-            role.name = v.name;
-            role.level = v.level;
-            role.roleType = v.roleType;
-            this.roles.push(role);
-          });
-        } else if (message.clazz === AddRoleResp) {
-          if ((<AddRoleResp>message.resp).result) {
-            this.wsService.sendPacket(GetRoleListReq, {});
-          } else {
-            snackBar.open('角色昵称重复，请更换其它昵称');
-          }
-        }
-      },
-      error: err => console.log(err),
-      complete: () => {
-      }
-    };
-    this.wsService.observable.subscribe(observer);
+    this.wsService.observable.subscribe(this.roleListObserver);
+    this.wsService.observable.subscribe(this.addRoleObserver);
+    this.wsService.observable.subscribe(this.deleteRoleObserver);
     this.wsService.sendPacket(GetRoleListReq, {});
-    // const role1 = new Role();
-    // role1.name = '小菲菲';
-    // role1.level = 20;
-    // role1.roleType = RoleType.DEVIL;
-    // const role2 = new Role();
-    // role2.name = '小二货';
-    // role2.level = 30;
-    // role2.roleType = RoleType.ELF;
-    // this.roles.push(role1);
-    // this.roles.push(role2);
     for (const typeName in RoleType) {
       if (RoleType.hasOwnProperty(typeName)) {
         const type = RoleType[<keyof typeof RoleType>typeName];
@@ -81,6 +111,14 @@ export class ChooseRoleComponent implements OnInit {
   addRole = () => {
     const type = RoleType[<keyof typeof RoleType>this.roleForm.get('roleTypeSelect').value];
     this.wsService.sendPacket(AddRoleReq, {roleName: this.roleForm.get('name').value, roleType: type});
+  }
+
+  chooseRole = (roleName: string) => {
+    console.log(`${roleName}`);
+  }
+
+  deleteRole = (roleName: string) => {
+    this.wsService.sendPacket(DeleteRoleReq, {roleName: roleName});
   }
 
   get roleSizeLess3() {
