@@ -1,5 +1,5 @@
 
-import { ChatReq, ChatResp, LoginAuthReq, LoginResultResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, PingHeartBeat, PongHeartBeat } from '../proto/bundle';
+import { ChatReq, ChatResp, LoginAuthReq, LoginResultResp, FirstEnterSceneResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, PingHeartBeat, PongHeartBeat } from '../proto/bundle';
 import { Type } from '@angular/core';
 import { Reader, Writer } from 'protobufjs';
 import { IPacket } from '../proto/IPacket';
@@ -23,6 +23,8 @@ export class PacketId {
     static readonly LOGIN_AUTH_REQ: number = 10001;
     /** 登录结果响应包*/
     static readonly LOGIN_RESULT_RESP: number = 10002;
+    /** 首次进入场景可见信息响应包*/
+    static readonly FIRST_ENTER_SCENE_RESP: number = 10401;
     /** 注册请求*/
     static readonly REGISTER_REQ: number = 10201;
     /** 注册响应包*/
@@ -55,6 +57,7 @@ export class PacketId {
         PacketId.put(PacketId.CHAT_RESP, ChatResp);
         PacketId.put(PacketId.LOGIN_AUTH_REQ, LoginAuthReq);
         PacketId.put(PacketId.LOGIN_RESULT_RESP, LoginResultResp);
+        PacketId.put(PacketId.FIRST_ENTER_SCENE_RESP, FirstEnterSceneResp);
         PacketId.put(PacketId.REGISTER_REQ, RegisterReq);
         PacketId.put(PacketId.REGISTER_RESP, RegisterResp);
         PacketId.put(PacketId.ADD_ROLE_REQ, AddRoleReq);

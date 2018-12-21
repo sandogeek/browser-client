@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Role } from './model/Role';
 import { RoleType, GetRoleListReq, GetRoleListResp,
-  AddRoleReq, AddRoleResp, DeleteRoleResp, DeleteRoleReq } from '../shared/model/proto/bundle';
+  AddRoleReq, AddRoleResp, DeleteRoleResp, DeleteRoleReq, ChooseRoleReq } from '../shared/model/proto/bundle';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { WebSocketService, CustomMessage } from '../shared/service/web-socket-service.service';
 import { PartialObserver } from 'rxjs';
@@ -94,6 +94,7 @@ export class ChooseRoleComponent implements OnInit {
     this.wsService.observable.subscribe(this.roleListObserver);
     this.wsService.observable.subscribe(this.addRoleObserver);
     this.wsService.observable.subscribe(this.deleteRoleObserver);
+    
     this.wsService.sendPacket(GetRoleListReq, {});
     for (const typeName in RoleType) {
       if (RoleType.hasOwnProperty(typeName)) {
@@ -114,7 +115,7 @@ export class ChooseRoleComponent implements OnInit {
   }
 
   chooseRole = (roleName: string) => {
-    console.log(`${roleName}`);
+    this.wsService.sendPacket(ChooseRoleReq, {name: roleName});
   }
 
   deleteRole = (roleName: string) => {
