@@ -39,6 +39,7 @@ export class WebSocketService {
   ws: WebSocket;
   observable: Observable<CustomMessage>;
   state: GameState = GameState.UNCONNECTED;
+  selectedRoleName: string;
   private timer: NodeJS.Timer;
 
   // subscribers: Array<Subscriber<any>> = [];

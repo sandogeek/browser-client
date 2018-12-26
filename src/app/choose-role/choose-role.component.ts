@@ -1,11 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Role } from './model/Role';
+import { Role, CustomRole } from './model/Role';
 import { RoleType, GetRoleListReq, GetRoleListResp,
-  AddRoleReq, AddRoleResp, DeleteRoleResp, DeleteRoleReq, ChooseRoleReq } from '../shared/model/proto/bundle';
+  AddRoleReq, AddRoleResp, DeleteRoleResp, DeleteRoleReq, ChooseRoleReq, ChooseRoleResp } from '../shared/model/proto/bundle';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { WebSocketService, CustomMessage } from '../shared/service/web-socket-service.service';
+import { WebSocketService, CustomMessage, GameState } from '../shared/service/web-socket-service.service';
 import { PartialObserver } from 'rxjs';
 import { MatSnackBar, MatTable } from '@angular/material';
+import { Router, ActivatedRoute } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd';
+import { RoleService } from '../shared/service/role.service';
 
 @Component({
   selector: 'app-choose-role',
@@ -52,10 +55,11 @@ export class ChooseRoleComponent implements OnInit {
           role.name = addRoleResp.roleInfo.name;
           role.level = addRoleResp.roleInfo.level;
           role.roleType = addRoleResp.roleInfo.roleType;
-          this.roles.push(role);
-          this.table.renderRows();
+          // this.roles.push(role);
+          // this.table.renderRows();
+          this.roles = [ ...this.roles, role];
         } else {
-          this.snackBar.open('角色昵称重复，请更换其它昵称');
+          this.messageService.error('角色昵称重复，请更换其它昵称');
         }
       }
     },
@@ -68,16 +72,26 @@ export class ChooseRoleComponent implements OnInit {
       if (message.clazz === DeleteRoleResp) {
         const deleteRoleResp = <DeleteRoleResp>message.resp;
         if (deleteRoleResp.result) {
-          this.roles.some((role, index, roles) => {
-            if (role.name === deleteRoleResp.nameDelete) {
-              roles.splice(index, 1);
-              return true;
-            }
-            return false;
-          });
-          this.table.renderRows();
+          this.roles = this.roles.filter(role => role.name !== deleteRoleResp.nameDelete);
         } else {
-          this.snackBar.open('角色删除失败');
+          this.messageService.error('角色删除失败');
+        }
+      }
+    },
+    error: err => console.log(err),
+    complete: () => {
+    }
+  };
+  chooseRoleObserver: PartialObserver<CustomMessage> = {
+    next : message => {
+      if (message.clazz === ChooseRoleResp) {
+        const chooseRoleResp = <ChooseRoleResp>message.resp;
+        if (chooseRoleResp.result) {
+          const customRole: CustomRole = {...chooseRoleResp.customRoleUiInfoResp,
+            roleTypeName: Role.getRoleTypeNameByType(chooseRoleResp.customRoleUiInfoResp.roleType)};
+          this.roleService.selectedRole = customRole;
+          this.wsService.state = GameState.GAMING;
+          this.router.navigate(['/gaming']);
         }
       }
     },
@@ -88,13 +102,17 @@ export class ChooseRoleComponent implements OnInit {
 
   constructor(
     private wsService: WebSocketService,
-    private snackBar: MatSnackBar,
-    private fb: FormBuilder
+    private roleService: RoleService,
+    private messageService: NzMessageService,
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.wsService.observable.subscribe(this.roleListObserver);
     this.wsService.observable.subscribe(this.addRoleObserver);
     this.wsService.observable.subscribe(this.deleteRoleObserver);
-    
+    this.wsService.observable.subscribe(this.chooseRoleObserver);
+
     this.wsService.sendPacket(GetRoleListReq, {});
     for (const typeName in RoleType) {
       if (RoleType.hasOwnProperty(typeName)) {
@@ -116,6 +134,7 @@ export class ChooseRoleComponent implements OnInit {
 
   chooseRole = (roleName: string) => {
     this.wsService.sendPacket(ChooseRoleReq, {name: roleName});
+    this.wsService.selectedRoleName = roleName;
   }
 
   deleteRole = (roleName: string) => {

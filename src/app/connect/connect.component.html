@@ -1,5 +1,5 @@
 
-<div *ngIf="!wsService.connected">
+<div *ngIf="!isConnected">
   <mat-form-field ><input matInput name="address" placeholder="地址" type="text" [(ngModel)]="address"></mat-form-field>
   <mat-form-field ><input matInput name="port" placeholder="端口号" type="text" [(ngModel)]="port"></mat-form-field>
   <mat-form-field >

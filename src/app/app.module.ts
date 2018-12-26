@@ -14,6 +14,14 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { UiTestComponent } from './ui-test/ui-test.component';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
+import { GamingComponent } from './gaming/gaming.component';
+import { GamingGuard } from './auth/gaming.guard';
+import { NgZorroAntdModule, NZ_I18N, en_US, zh_CN } from 'ng-zorro-antd';
+import { HttpClientModule } from '@angular/common/http';
+import { registerLocaleData } from '@angular/common';
+import zh from '@angular/common/locales/zh';
+
+registerLocaleData(zh);
 
 const appRoutes: Routes = [
   // { path: 'crisis-center', component: CrisisListComponent },
@@ -28,7 +36,11 @@ const appRoutes: Routes = [
     path: 'chooseRole',
     component: ChooseRoleComponent,
     canActivate: [ChooseRoleGuard],
-    // data: { title: 'Heroes List' }
+  },
+  {
+    path: 'gaming',
+    component: GamingComponent,
+    canActivate: [GamingGuard],
   },
   { path: '',
     // redirectTo: '/heroes',
@@ -46,6 +58,7 @@ const appRoutes: Routes = [
     ConnectedComponent,
     ChooseRoleComponent,
     UiTestComponent,
+    GamingComponent,
   ],
   imports: [
     RouterModule.forRoot(
@@ -56,10 +69,13 @@ const appRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    NgZorroAntdModule,
+    HttpClientModule
   ],
   providers: [
-    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2000, horizontalPosition: 'center', verticalPosition: 'top'}}
+    // {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2000, horizontalPosition: 'center', verticalPosition: 'top'},
+    { provide: NZ_I18N, useValue: zh_CN }
   ],
   bootstrap: [AppComponent]
 })

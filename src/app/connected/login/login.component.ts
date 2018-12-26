@@ -6,8 +6,8 @@ import { LoginFacade } from './facade/LoginFacade';
 import { WebSocketService, GameState, CustomMessage } from 'src/app/shared/service/web-socket-service.service';
 import { LoginAuthReq, LoginResultResp, LoginResultType } from 'src/app/shared/model/proto/bundle';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
+import { NzMessageService } from 'ng-zorro-antd';
 
 
 @Component({
@@ -24,9 +24,9 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private wsService: WebSocketService,
+    private messageService: NzMessageService,
     private router: Router,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar,
     private fb: FormBuilder
   ) {
     const observer: PartialObserver<CustomMessage> = {
@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
             // console.log(`接收内容：packetId[${message.packetId}] 类名[${message.clazz.name}] 内容\n${JSON.stringify(message.resp)}`);
             this.router.navigate(['/chooseRole']);
           } else {
-            snackBar.open('登陆失败，账号或密码错误', null);
+            this.messageService.error('登陆失败，账号或密码错误');
             // this.password = '';
           }
         }

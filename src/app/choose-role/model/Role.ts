@@ -1,6 +1,7 @@
 import { RoleType } from 'src/app/shared/model/proto/bundle';
-
+import { Long } from 'protobufjs';
 export class Role {
+    roleId: (number|Long);
     /**
      * 角色昵称
      */
@@ -42,3 +43,9 @@ export class Role {
     }
 }
 Role.init();
+export class CustomRole extends Role {
+    maxHp: (number|Long);
+    maxMp: (number|Long);
+    currentHp: (number|Long);
+    currentMp: (number|Long);
+}

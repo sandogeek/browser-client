@@ -36,6 +36,9 @@ export class ConnectComponent implements OnInit {
 
   ngOnInit() {
   }
+  get isConnected() {
+    return this.wsService.state === GameState.CONNECTED;
+  }
   connect = () => {
     this.wsService.createObservableSocket(`ws://${this.address}:${this.port}/${this.subdir}`);
     this.observer = {

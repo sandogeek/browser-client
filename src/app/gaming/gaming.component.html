@@ -1,0 +1,32 @@
+<h4>当前所在场景:{{ currentSceneName }}</h4>
+<h4>可前往场景：</h4>
+<nz-table 
+#roleTable
+nzBordered
+nzTitle="当前场景其它玩家"
+nzSize="middle"
+nzFrontPagination="false"
+nzShowPagination="false"
+[nzData]="roles">
+  <thead>
+    <tr>
+      <th>角色昵称</th>
+      <th>角色类型</th>
+      <th>等级</th>
+      <!-- <th>功能区</th> -->
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let role of roleTable.data">
+      <td>{{role.name}}</td>
+      <td>{{role.roleTypeName}}</td>
+      <td>{{role.level}}</td>
+      <!-- <td>
+        <nz-button-group>
+          <button nz-button (click)="chooseRole(role.roleId)">选择</button>
+          <button nz-button (click)="deleteRole(role.roleId)">删除</button>
+        </nz-button-group>
+      </td> -->
+    </tr>
+  </tbody>
+</nz-table>

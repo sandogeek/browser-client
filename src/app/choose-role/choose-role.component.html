@@ -1,43 +1,51 @@
-<h4>选择角色：</h4>
-<table mat-table #roleTable [dataSource]="roles" class="mat-elevation-z5">
-  <ng-container matColumnDef="roleName">
-    <th mat-header-cell *matHeaderCellDef> 角色昵称 </th>
-    <td mat-cell *matCellDef="let role"> {{role.name}} </td>
-  </ng-container>
-  <ng-container matColumnDef="roleType">
-    <th mat-header-cell *matHeaderCellDef> 角色类型 </th>
-    <td mat-cell *matCellDef="let role"> {{role.roleTypeName}} </td>
-  </ng-container>
-  <ng-container matColumnDef="roleLevel">
-    <th mat-header-cell *matHeaderCellDef> 等级 </th>
-    <td mat-cell *matCellDef="let role"> {{role.level}} </td>
-  </ng-container>
-  <ng-container matColumnDef="function">
-    <th mat-header-cell *matHeaderCellDef> 功能区 </th>
-    <td mat-cell *matCellDef="let role">
-      <button mat-raised-button (click)="chooseRole(role.name)">选择</button>
-      <button mat-raised-button (click)="deleteRole(role.name)">删除</button>
-    </td>
-  </ng-container>
-  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-  <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
-</table>
-<div *ngIf = 'roleSizeLess3'>
-  <h4>添加角色:</h4>
-  <form method="post" (ngSubmit)="addRole()" [formGroup]="roleForm">
-    <mat-form-field >
-      <!-- because with [ ] you are trying to bind a variable -->
-      <input matInput name="name" placeholder="昵称" formControlName="name" required>
-      <mat-error *ngIf="roleForm.get('name').hasError('required')">昵称不能为空</mat-error>
-    </mat-form-field>
-    <mat-form-field >
-      <mat-select formControlName="roleTypeSelect" placeholder="角色类型" name="roleTypeSelect" required>
-        <mat-option *ngFor ="let roleTypeName of roleTypeNames" [value]="getEnumName(roleTypeName)">{{roleTypeName}}</mat-option>
-      </mat-select>
-      <mat-error *ngIf="roleForm.get('roleTypeSelect').hasError('required')">角色类型不能为空</mat-error>
-    </mat-form-field>
-    <button mat-raised-button [disabled]="!roleForm.valid" type="submit">添加</button>
-  </form>
+<nz-table 
+#roleTable
+nzBordered
+nzTitle="已有角色"
+[nzFooter]="footer"
+nzSize="middle"
+nzFrontPagination="false"
+nzShowPagination="false"
+[nzData]="roles">
+  <thead>
+    <tr>
+      <th>角色昵称</th>
+      <th>角色类型</th>
+      <th>等级</th>
+      <th>功能区</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let role of roleTable.data">
+      <td>{{role.name}}</td>
+      <td>{{role.roleTypeName}}</td>
+      <td>{{role.level}}</td>
+      <td>
+        <nz-button-group>
+          <button nz-button (click)="chooseRole(role.name)">选择</button>
+          <button nz-button (click)="deleteRole(role.name)">删除</button>
+        </nz-button-group>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+<ng-template #footer>
+  <div *ngIf = 'roleSizeLess3'>
+    <form method="post" (ngSubmit)="addRole()" [formGroup]="roleForm">
+      <mat-form-field >
+        <!-- because with [ ] you are trying to bind a variable -->
+        <input matInput name="name" placeholder="昵称" formControlName="name" required>
+        <mat-error *ngIf="roleForm.get('name').hasError('required')">昵称不能为空</mat-error>
+      </mat-form-field>
+      <mat-form-field >
+        <mat-select formControlName="roleTypeSelect" placeholder="角色类型" name="roleTypeSelect" required>
+          <mat-option *ngFor ="let roleTypeName of roleTypeNames" [value]="getEnumName(roleTypeName)">{{roleTypeName}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="roleForm.get('roleTypeSelect').hasError('required')">角色类型不能为空</mat-error>
+      </mat-form-field>
+      <button mat-raised-button [disabled]="!roleForm.valid" type="submit">添加</button>
+    </form>
+  </div>
+</ng-template>
 
-</div>
 
