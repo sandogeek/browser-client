@@ -1,5 +1,36 @@
-<h4>当前所在场景:{{ currentSceneName }}</h4>
-<h4>可前往场景：</h4>
+<h3>当前所在场景:<span style="color:crimson">{{ currentSceneName }}</span></h3>
+<div nz-row nzGutter="16" nzType="flex" nzJustify="center">
+  <div nz-col class="gutter-row" nzXs="10" nzSm="10" nzMd="10" nzLg="8" nzXl="6">
+    <div class="gutter-box">
+      <nz-card nzTitle="可前往场景">
+        <nz-list>
+          <nz-list-item *ngFor = "let canGoInfo of sceneCanGoInfos" [nzContent]="nzContent" [nzActions]="[go]">
+            <ng-template #go><button nz-button (click)="switchTo(canGoInfo.sceneId)"><i nz-icon type="enter" theme="outline"></i>前往</button></ng-template>
+            <ng-template #nzContent>
+                {{canGoInfo.sceneName}}
+            </ng-template>
+          </nz-list-item>
+        </nz-list>
+      </nz-card>
+    </div>
+  </div>
+  <div nz-col class="gutter-row" nzXs="10" nzSm="10" nzMd="10" nzLg="8" nzXl="6">
+    <div class="gutter-box">
+      <nz-card nzTitle="个人信息">
+        <nz-list [nzDataSource]="selfInfo" [nzRenderItem]="item">
+          <ng-template #item let-item>
+            <nz-list-item [nzContent]="nzContent">
+              <ng-template #nzContent>
+                {{item}}
+              </ng-template>
+            </nz-list-item>
+          </ng-template>
+        </nz-list>
+      </nz-card>
+    </div>
+  </div>
+</div>
+
 <nz-table 
 #roleTable
 nzBordered
