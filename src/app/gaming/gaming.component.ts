@@ -29,11 +29,7 @@ export class GamingComponent implements OnInit {
       // console.log(`${JSON.stringify(message.resp)}`);
       if (message.clazz === RoleUiInfoResp) {
         const roleUiInfoResp = <RoleUiInfoResp>message.resp;
-        const role = new Role();
-        role.roleId = roleUiInfoResp.roleId;
-        role.name = roleUiInfoResp.name;
-        role.level = roleUiInfoResp.level;
-        role.roleType = roleUiInfoResp.roleType;
+        const role: Role = {...roleUiInfoResp, roleTypeName: null};
         this.roles = [ ...this.roles, role];
       } else if (message.clazz === SceneUiInfoResp) {
         const sceneUiInfo = <SceneUiInfoResp>message.resp;
