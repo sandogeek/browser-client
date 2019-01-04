@@ -1,0 +1,9 @@
+<!-- https://www.telerik.com/kendo-angular-ui/components/conversationalui/ -->
+<kendo-chat
+  [messages]="feed | async"
+  [user]="user"
+  (sendMessage)="sendMessage($event)"
+>
+  <kendo-chat-messages send="发送" messagePlaceholder="">
+  </kendo-chat-messages>
+</kendo-chat>

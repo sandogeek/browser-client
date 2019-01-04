@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -20,6 +20,13 @@ import { NgZorroAntdModule, NZ_I18N, en_US, zh_CN } from 'ng-zorro-antd';
 import { HttpClientModule } from '@angular/common/http';
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
+import { BackpackComponent } from './gaming/backpack/backpack.component';
+import { EquipComponent } from './gaming/equip/equip.component';
+import { ChatComponent } from './gaming/chat/chat.component';
+import { MailComponent } from './gaming/mail/mail.component';
+import { ShopComponent } from './gaming/shop/shop.component';
+import { ChatModule } from '@progress/kendo-angular-conversational-ui';
+
 
 registerLocaleData(zh);
 
@@ -50,6 +57,13 @@ const appRoutes: Routes = [
   // { path: '**', component: PageNotFoundComponent }
 ];
 @NgModule({
+  entryComponents: [
+    BackpackComponent,
+    EquipComponent,
+    ChatComponent,
+    MailComponent,
+    ShopComponent,
+  ],
   declarations: [
     AppComponent,
     LoginComponent,
@@ -59,6 +73,11 @@ const appRoutes: Routes = [
     ChooseRoleComponent,
     UiTestComponent,
     GamingComponent,
+    BackpackComponent,
+    EquipComponent,
+    ChatComponent,
+    MailComponent,
+    ShopComponent,
   ],
   imports: [
     RouterModule.forRoot(
@@ -71,9 +90,11 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     MaterialModule,
     NgZorroAntdModule,
-    HttpClientModule
+    HttpClientModule,
+    ChatModule
   ],
   providers: [
+    { provide: LOCALE_ID, useValue: 'zh' },
     // {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2000, horizontalPosition: 'center', verticalPosition: 'top'},
     { provide: NZ_I18N, useValue: zh_CN }
   ],
