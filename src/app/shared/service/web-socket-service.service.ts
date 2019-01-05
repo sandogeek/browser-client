@@ -3,7 +3,7 @@ import { Observable, Subscriber, Subject, ConnectableObservable } from 'rxjs';
 import { WsPacket } from '../model/packet/WsPacket';
 import { PacketId } from '../model/packet/PacketId';
 import { PingHeartBeat, PongHeartBeat } from '../model/proto/bundle';
-import { IPacket } from '../model/proto/IPacket';
+import { IPacket } from '../model/packet/IPacket';
 
 // export class MyUnsubscribable implements Unsubscribable {
 //   outer: WebSocketService;

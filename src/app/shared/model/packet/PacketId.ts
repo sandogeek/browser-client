@@ -2,7 +2,7 @@
 import { ChatReq, ChatResp, LoginAuthReq, LoginResultResp, CustomRoleUiInfoResp, MonsterUiInfoResp, RoleUiInfoResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, EnterWorldReq, ObjectDisappearResp, SwitchSceneReq, PingHeartBeat, PongHeartBeat, SceneUiInfoResp } from '../proto/bundle';
 import { Type } from '@angular/core';
 import { Reader, Writer } from 'protobufjs';
-import { IPacket } from '../proto/IPacket';
+import { IPacket } from './IPacket';
 
 // class Codec {
 //     decode: (reader: (Reader|Uint8Array), length?: number) => any;
