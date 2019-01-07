@@ -5,7 +5,7 @@ export class Role {
     /**
      * 角色昵称
      */
-    name: String;
+    name: string;
     /**
      * 角色类型
      */

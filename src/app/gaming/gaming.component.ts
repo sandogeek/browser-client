@@ -59,7 +59,8 @@ export class GamingComponent implements OnInit {
         const objectDisappearResp = <ObjectDisappearResp>message.resp;
         this.roles = this.roles.filter(role => role.roleId !== objectDisappearResp.id);
       }
-    }
+    },
+    error: err => console.log(err)
   };
   constructor(
     private wsService: WebSocketService,

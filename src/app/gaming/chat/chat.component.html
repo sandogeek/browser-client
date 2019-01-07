@@ -1,5 +1,5 @@
 <!-- https://www.telerik.com/kendo-angular-ui/components/conversationalui/ -->
-<kendo-chat
+<kendo-chat #chatDom
   [messages]="feed | async"
   [user]="user"
   (sendMessage)="sendMessage($event)"

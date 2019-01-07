@@ -1,5 +1,5 @@
 
-import { ChatReq, ChatResp, LoginAuthReq, LoginResultResp, CustomRoleUiInfoResp, MonsterUiInfoResp, RoleUiInfoResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, EnterWorldReq, ObjectDisappearResp, SwitchSceneReq, PingHeartBeat, PongHeartBeat, SceneUiInfoResp } from '../proto/bundle';
+import { LoginAuthReq, LoginResultResp, CustomRoleUiInfoResp, MonsterUiInfoResp, RoleUiInfoResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, EnterWorldReq, ObjectDisappearResp, SwitchSceneReq, PingHeartBeat, PongHeartBeat, ChatMessage, ChatReq, ChatResp, SceneUiInfoResp } from '../proto/bundle';
 import { Type } from '@angular/core';
 import { Reader, Writer } from 'protobufjs';
 import { IPacket } from './IPacket';
@@ -15,10 +15,6 @@ export class PacketId {
 
     // 以下的start到end之间的内容由服务端生成，请勿删除这两行注释
     // start
-    /** 聊天请求*/
-    static readonly CHAT_REQ: number = 10101;
-    /** 聊天响应*/
-    static readonly CHAT_RESP: number = 10102;
     /** 登录认证*/
     static readonly LOGIN_AUTH_REQ: number = 10001;
     /** 登录结果响应包*/
@@ -59,14 +55,18 @@ export class PacketId {
     static readonly PING_HEART_BEAT: number = 1001;
     /** pong心跳包*/
     static readonly PONG_HEART_BEAT: number = 1002;
+    /** 聊天消息*/
+    static readonly CHAT_MESSAGE: number = 10103;
+    /** 聊天请求*/
+    static readonly CHAT_REQ: number = 10101;
+    /** 聊天响应*/
+    static readonly CHAT_RESP: number = 10102;
     /** 场景信息响应包*/
     static readonly SCENE_UI_INFO_RESP: number = 10404;
     // end
 
     constructor() {
         // start
-        PacketId.put(PacketId.CHAT_REQ, ChatReq);
-        PacketId.put(PacketId.CHAT_RESP, ChatResp);
         PacketId.put(PacketId.LOGIN_AUTH_REQ, LoginAuthReq);
         PacketId.put(PacketId.LOGIN_RESULT_RESP, LoginResultResp);
         PacketId.put(PacketId.CUSTOM_ROLE_UI_INFO_RESP, CustomRoleUiInfoResp);
@@ -87,6 +87,9 @@ export class PacketId {
         PacketId.put(PacketId.SWITCH_SCENE_REQ, SwitchSceneReq);
         PacketId.put(PacketId.PING_HEART_BEAT, PingHeartBeat);
         PacketId.put(PacketId.PONG_HEART_BEAT, PongHeartBeat);
+        PacketId.put(PacketId.CHAT_MESSAGE, ChatMessage);
+        PacketId.put(PacketId.CHAT_REQ, ChatReq);
+        PacketId.put(PacketId.CHAT_RESP, ChatResp);
         PacketId.put(PacketId.SCENE_UI_INFO_RESP, SceneUiInfoResp);
         // end
     }
