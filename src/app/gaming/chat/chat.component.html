@@ -1,9 +1,41 @@
 <!-- https://www.telerik.com/kendo-angular-ui/components/conversationalui/ -->
-<kendo-chat #chatDom
+<!-- <kendo-chat #chatDom
   [messages]="feed | async"
   [user]="user"
   (sendMessage)="sendMessage($event)"
 >
   <kendo-chat-messages send="发送" messagePlaceholder="">
   </kendo-chat-messages>
-</kendo-chat>
+</kendo-chat> -->
+<!-- Start : Chat Header  -->
+<div class="wrapper">
+  <div class="menu">
+    <div class="name">Group Chat</div>
+  </div>
+  <!-- End : Chat Header  -->
+
+
+  <!-- Start : Chat section  -->
+  <ol class="chat" #scrollMe [scrollTop]="scrollMe.scrollHeight" *ngIf="messages.length > 0">
+    <li [ngClass]="{'self': message.author.id == user.id , 'other': message.author.id != user.id }" *ngFor="let message of messages">
+      <div class="user"><span class="user-name">{{ message.author.name }}</span></div>
+      <div class="msg">
+          <p> {{ message.text }} </p>
+          <!-- <time>{{ message.time }}</time> -->
+      </div>
+    </li>
+  </ol> 
+
+  <!-- End : Chat section  -->
+
+
+  <!-- Start : Chat Sending  -->
+  <div class="typezone">
+    <form>
+        <input class="chat-input" type="text" #msgInput (keydown.enter)="sendMessage(msgInput.value);false;msgInput.value='';" placeholder="开始交流"/>
+        <input type="submit" class="send" value="" (click)="sendMessage(msgInput.value);false;msgInput.value='';"/>
+    </form>
+  </div>
+  <!-- End : Chat Sending  -->
+</div>
+

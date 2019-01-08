@@ -10,7 +10,19 @@ import { ChatMessage } from 'src/app/shared/model/proto/bundle';
 })
 export class ChatService {
   private local: Subject<Message> = new Subject<Message>();
-  private worldMessage: Message[] = new Array();
+  worldMessage: Message[] = new Array<Message>();
+  // private worldFeed = merge(
+  //   from(this.worldMessage),
+  //   this.local
+  // ).pipe(
+  //   // ... and emit an array of all messages
+  //   scan((acc, x) => {
+  //     this.worldMessage = [...acc, x];
+  //     console.log(`${this.worldMessage.length}`);
+  //     return this.worldMessage;
+  //   }, [])
+  // );
+
   private chatMessageObserver: PartialObserver<CustomMessage> = {
     next : message => {
       if (message.clazz === ChatMessage) {
@@ -21,6 +33,7 @@ export class ChatService {
           text: chatMessage.content
         };
         if (chatMessage.channelId === 0 ) {
+          this.worldMessage.push(tempMessage);
           this.next(tempMessage);
         }
       }
@@ -35,14 +48,15 @@ export class ChatService {
   }
 
   getFeed = () => {
+    // return this.worldFeed;
     return merge(
       from(this.worldMessage),
       this.local
     ).pipe(
       // ... and emit an array of all messages
       scan((acc, x) => {
-        this.worldMessage = [...acc, x];
-        return this.worldMessage;
+        // console.log(`${this.worldMessage.length}`);
+        return [...acc, x];
       }, [])
     );
   }

@@ -11,6 +11,7 @@ import { EquipComponent } from './equip/equip.component';
 import { ChatComponent } from './chat/chat.component';
 import { MailComponent } from './mail/mail.component';
 import { ShopComponent } from './shop/shop.component';
+import { ChatService } from './chat/service/chat.service';
 
 @Component({
   selector: 'app-gaming',
@@ -65,7 +66,9 @@ export class GamingComponent implements OnInit {
   constructor(
     private wsService: WebSocketService,
     private roleService: RoleService,
-    private modalService: NzModalService
+    private modalService: NzModalService,
+    // 提前创建聊天服务
+    private chatService: ChatService,
   ) {
     this.wsService.observable.subscribe(this.infoObserver);
     this.wsService.observable.subscribe(this.objectDisappearObserver);

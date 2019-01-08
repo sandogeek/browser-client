@@ -16,10 +16,10 @@ import { ChatService } from './service/chat.service';
 export class ChatComponent implements AfterViewInit {
   public feed: Observable<{}>;
   public messages: Message[];
-  messagePlaceholder: string = null;
+  public currentMessagesArray: Message[];
 
-  @ViewChild('chatDom')
-  chatDom: ElementRef;
+  // @ViewChild('chatDom')
+  // chatDom: ElementRef;
 
   public readonly user: User = {
     id: this.roleService.selectedRole.roleId,
@@ -33,27 +33,29 @@ export class ChatComponent implements AfterViewInit {
     private chatService: ChatService,
     private elementRef: ElementRef
   ) {
-    // Merge local and remote messages into a single stream
-    // this.messages = this.chatService.worldMessages;
+    this.currentMessagesArray = this.chatService.worldMessage;
     this.feed = this.chatService.getFeed();
    }
 
    ngAfterViewInit() {
     const dom = this.elementRef.nativeElement.querySelector('.k-message-list');
     dom.scrollTop = Math.max(0, dom.scrollHeight - dom.offsetHeight);
+    // dom.scrollIntoView()
+    // setTimeout(() => dom.scrollTop = Math.max(0, dom.scrollHeight - dom.offsetHeight), 300 );
   }
   // tslint:disable-next-line:use-life-cycle-interface
-  ngOnDestroy() {
-    const dom = this.elementRef.nativeElement.querySelector('.k-message-list');
-    console.log(`${dom.scrollHeight}   ${dom.offsetHeight}`);
-  }
+  // ngOnDestroy() {
+  //   this.chatService.worldMessage = this.messages;
+  // }
   // subscription: Subscription;
-  public sendMessage(e: SendMessageEvent): void {
+  public sendMessage = (e: SendMessageEvent): void => {
     const subscription = this.wsService.observable.subscribe({
       next : message => {
         if (message.clazz === ChatResp) {
           const chatResp = <ChatResp>message.resp;
           if (chatResp.result) {
+            // this.messages = [...this.messages, e.message];
+            this.currentMessagesArray.push(e.message);
             this.chatService.next(e.message);
           }
           subscription.unsubscribe();
