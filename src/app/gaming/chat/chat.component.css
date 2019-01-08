@@ -1,6 +1,6 @@
 .wrapper {
     position: relative;
-    height: 500px;
+    height: 600px;
 }
 /* M E N U */
 
@@ -89,7 +89,7 @@
     padding: 0 0 0 0;
     position: absolute;
     top:60px;
-    height: 80vh; 
+    height: 80%; 
     width: 100%;
     overflow-y: scroll;
     /* padding-right: 17px; */

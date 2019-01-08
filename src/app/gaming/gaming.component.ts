@@ -118,7 +118,8 @@ export class GamingComponent implements OnInit {
       nzContent: ChatComponent,
       nzComponentParams: {
       },
-      nzFooter: null
+      nzFooter: null,
+      nzWidth: 600
     });
   }
   showMail = (tplTitle: TemplateRef<{}>) => {

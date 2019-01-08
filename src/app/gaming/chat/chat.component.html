@@ -16,8 +16,8 @@
 
 
   <!-- Start : Chat section  -->
-  <ol class="chat" #scrollMe [scrollTop]="scrollMe.scrollHeight" *ngIf="messages.length > 0">
-    <li [ngClass]="{'self': message.author.id == user.id , 'other': message.author.id != user.id }" *ngFor="let message of messages">
+  <ol class="chat" #scrollMe [scrollTop]="scrolltop">
+    <li [ngClass]="{'self': message.author.id == user.id , 'other': message.author.id != user.id }" *ngFor="let message of feed | async">
       <div class="user"><span class="user-name">{{ message.author.name }}</span></div>
       <div class="msg">
           <p> {{ message.text }} </p>
