@@ -1,12 +1,12 @@
 import { Component, OnInit, ElementRef, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { User, Message, SendMessageEvent } from '@progress/kendo-angular-conversational-ui';
-import { Observable, Subject, merge, from, Subscription } from 'rxjs';
-import { scan } from 'rxjs/operators/scan';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { WebSocketService } from 'src/app/shared/service/web-socket-service.service';
 import { RoleService } from 'src/app/shared/service/role.service';
 import { ChatResp, ChatReq } from 'src/app/shared/model/proto/bundle';
 import { ChatService } from './service/chat.service';
+
+import { User } from './model/User';
+import { Message } from './model/Message';
 
 @Component({
   selector: 'app-chat',
@@ -48,7 +48,6 @@ export class ChatComponent {
             const tempMessage: Message = {
               author: this.user,
               text: e,
-              timestamp: new Date()
             };
             this.chatService.next(tempMessage);
             this.currentMessagesArray.push(tempMessage);

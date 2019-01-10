@@ -8,7 +8,7 @@
 
   <!-- Start : Chat section -->
   <div class="chat" appAutoScrollToBottom #anchor="scrollAnchor" [(autoScroll)]="autoScroll">
-    <ol >
+    <ol (resized)="anchor.scrollToBottom()">
       <li [ngClass]="{'self': message.author.id == user.id , 'other': message.author.id != user.id }" *ngFor="let message of source$ | async">
         <div class="user"><span class="user-name">{{ message.author.name }}</span></div>
         <div class="msg">
@@ -16,10 +16,7 @@
             <!-- <time>{{ message.time }}</time> -->
         </div>
       </li>
-      <kendo-resize-sensor (resize)="anchor.scrollToBottom()">
-      </kendo-resize-sensor>
     </ol>
-    
   </div>
   <!-- End : Chat section  -->
 

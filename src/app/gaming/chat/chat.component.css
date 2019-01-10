@@ -96,6 +96,10 @@
     padding: 0;
 }
 
+.chat ol {
+    margin: 0;
+    padding: 0;
+}
 .chat li {
     padding: 0.5rem;
     overflow: hidden;

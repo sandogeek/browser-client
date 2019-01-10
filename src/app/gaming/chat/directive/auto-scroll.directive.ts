@@ -1,7 +1,5 @@
 import { Directive, ElementRef, NgZone, Renderer2, AfterViewInit,
   OnInit, OnDestroy, EventEmitter, Input, Output, HostBinding } from '@angular/core';
-import ResizeSensor from './ResizeSensor';
-
 
 @Directive({
   selector: '[appAutoScrollToBottom]',
@@ -14,6 +12,8 @@ export class AutoScrollToBottomDirective implements AfterViewInit, OnInit {
   autoScrollChange: EventEmitter<boolean> = new EventEmitter();
   @HostBinding('style.overflow-anchor')
   overflowAnchor = 'none';
+  @HostBinding('style.overflow-y')
+  overflowY = 'auto';
   private scrolling = false;
   // resizeSensor: ResizeSensor = null;
 
@@ -21,11 +21,8 @@ export class AutoScrollToBottomDirective implements AfterViewInit, OnInit {
     this.zone.runOutsideAngular(() => {
         this.renderer.listen(this.element.nativeElement, 'scroll', () => this.onScroll());
     });
-    const resizeSensor = new ResizeSensor(this.element.nativeElement, () => {
-      this.scrollToBottom();
-    });
   }
-  ngAfterViewInit = () => {
+  ngAfterViewInit() {
     setTimeout(() => {
       this.scrollToBottom();
     });
@@ -35,7 +32,8 @@ export class AutoScrollToBottomDirective implements AfterViewInit, OnInit {
     private element: ElementRef,
     private zone: NgZone,
     private renderer: Renderer2,
-  ) { }
+  ) {
+   }
 
   onScroll = () => {
     const maxDelta = 2;

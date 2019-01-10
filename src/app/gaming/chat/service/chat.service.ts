@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject, merge, from, PartialObserver } from 'rxjs';
 import { scan, delay } from 'rxjs/operators';
-import { Message } from '@progress/kendo-angular-conversational-ui';
 import { WebSocketService, CustomMessage } from 'src/app/shared/service/web-socket-service.service';
 import { ChatMessage } from 'src/app/shared/model/proto/bundle';
+import { Message } from '../model/Message';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +29,6 @@ export class ChatService {
         const chatMessage = <ChatMessage>message.resp;
         const tempMessage: Message = {
           author: {id: chatMessage.sourceRoleId, name: chatMessage.name},
-          timestamp: new Date(),
           text: chatMessage.content
         };
         if (chatMessage.channelId === 0 ) {
