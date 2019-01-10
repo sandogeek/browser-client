@@ -1,31 +1,26 @@
-<!-- https://www.telerik.com/kendo-angular-ui/components/conversationalui/ -->
-<!-- <kendo-chat #chatDom
-  [messages]="feed | async"
-  [user]="user"
-  (sendMessage)="sendMessage($event)"
->
-  <kendo-chat-messages send="发送" messagePlaceholder="">
-  </kendo-chat-messages>
-</kendo-chat> -->
-<!-- Start : Chat Header  -->
 <div class="wrapper">
+  <!-- Start : Chat Header  -->
   <div class="menu">
-    <div class="name">Group Chat</div>
+    <div class="name">世界</div>
   </div>
   <!-- End : Chat Header  -->
 
 
-  <!-- Start : Chat section  -->
-  <ol class="chat" #scrollMe [scrollTop]="scrolltop">
-    <li [ngClass]="{'self': message.author.id == user.id , 'other': message.author.id != user.id }" *ngFor="let message of feed | async">
-      <div class="user"><span class="user-name">{{ message.author.name }}</span></div>
-      <div class="msg">
-          <p> {{ message.text }} </p>
-          <!-- <time>{{ message.time }}</time> -->
-      </div>
-    </li>
-  </ol> 
-
+  <!-- Start : Chat section -->
+  <div class="chat" appAutoScrollToBottom #anchor="scrollAnchor" [(autoScroll)]="autoScroll">
+    <ol >
+      <li [ngClass]="{'self': message.author.id == user.id , 'other': message.author.id != user.id }" *ngFor="let message of source$ | async">
+        <div class="user"><span class="user-name">{{ message.author.name }}</span></div>
+        <div class="msg">
+            <p> {{ message.text }} </p>
+            <!-- <time>{{ message.time }}</time> -->
+        </div>
+      </li>
+      <kendo-resize-sensor (resize)="anchor.scrollToBottom()">
+      </kendo-resize-sensor>
+    </ol>
+    
+  </div>
   <!-- End : Chat section  -->
 
 

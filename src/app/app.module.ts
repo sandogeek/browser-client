@@ -25,8 +25,8 @@ import { EquipComponent } from './gaming/equip/equip.component';
 import { ChatComponent } from './gaming/chat/chat.component';
 import { MailComponent } from './gaming/mail/mail.component';
 import { ShopComponent } from './gaming/shop/shop.component';
-import { ChatModule } from '@progress/kendo-angular-conversational-ui';
-
+import { ResizeSensorModule } from '@progress/kendo-angular-resize-sensor';
+import { AutoScrollToBottomDirective } from './gaming/chat/directive/auto-scroll.directive';
 
 registerLocaleData(zh);
 
@@ -78,6 +78,7 @@ const appRoutes: Routes = [
     ChatComponent,
     MailComponent,
     ShopComponent,
+    AutoScrollToBottomDirective,
   ],
   imports: [
     RouterModule.forRoot(
@@ -91,7 +92,7 @@ const appRoutes: Routes = [
     MaterialModule,
     NgZorroAntdModule,
     HttpClientModule,
-    ChatModule
+    ResizeSensorModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'zh' },

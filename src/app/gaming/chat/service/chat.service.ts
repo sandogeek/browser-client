@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, merge, from, PartialObserver } from 'rxjs';
-import { scan } from 'rxjs/operators';
+import { scan, delay } from 'rxjs/operators';
 import { Message } from '@progress/kendo-angular-conversational-ui';
 import { WebSocketService, CustomMessage } from 'src/app/shared/service/web-socket-service.service';
 import { ChatMessage } from 'src/app/shared/model/proto/bundle';
@@ -9,7 +9,7 @@ import { ChatMessage } from 'src/app/shared/model/proto/bundle';
   providedIn: 'root'
 })
 export class ChatService {
-  private local: Subject<Message> = new Subject<Message>();
+  private messagesSource$: Subject<Message> = new Subject<Message>();
   worldMessage: Message[] = new Array<Message>();
   // private worldFeed = merge(
   //   from(this.worldMessage),
@@ -47,18 +47,23 @@ export class ChatService {
     this.wsService.observable.subscribe(this.chatMessageObserver);
   }
 
-  getFeed = () => {
+  getMessagesSource = () => {
     // return this.worldFeed;
     return merge(
       from(this.worldMessage),
-      this.local
+      this.messagesSource$
     ).pipe(
+      delay(0),
       // ... and emit an array of all messages
       scan((acc, x) => {
         // console.log(`${this.worldMessage.length}`);
         return [...acc, x];
       }, [])
     );
+    // const historyMessage = new Array<Message>();
+    // historyMessage.push(...this.worldMessage);
+    // this.messagesSource$.next(historyMessage);
+    // return this.messagesSource$;
   }
 
   // get worldMessages() {
@@ -66,6 +71,6 @@ export class ChatService {
   // }
 
   next = (message: Message) => {
-    this.local.next(message);
+    this.messagesSource$.next(message);
   }
 }

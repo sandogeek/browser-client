@@ -8,7 +8,9 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    right: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     width: 100%;
     height: 50px;
     background: rgba(27,35,42,0.9);
@@ -49,14 +51,12 @@
     background: rgba(0,0,0,0.15);
 }
 .name {
-    position: absolute;
-    top: 3px;
-    left: 20px;
     font-family: 'Lato';
     font-size: 25px;
     font-weight: 300;
     color: rgba(255,255,255,0.98);
     cursor: default;
+    margin-left: 10px;
 }
 .last {
     position: absolute;
@@ -85,22 +85,32 @@
 .chat {
     list-style: none;
     background: none;
-    margin: 0;
-    padding: 0 0 0 0;
     position: absolute;
     top:60px;
     height: 80%; 
     width: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
     /* padding-right: 17px; */
     left: 0;
+    margin: 0;
+    padding: 0;
 }
+
 .chat li {
     padding: 0.5rem;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    margin: 0 0 0 10px;
 }
+
+.chat .self {
+    /* justify-content: flex-end; */
+    align-items: flex-end;
+    margin: 0 10px 0 0;
+}
+
 .chat .day {
     position: relative;
     display: block;
@@ -175,10 +185,7 @@
     border-bottom-color: transparent;
 } */
 
-.self {
-    justify-content: flex-end;
-    align-items: flex-end;
-}
+
 .self .msg {
     border-bottom-right-radius: 0px;
     box-shadow: 1px 2px 0px #c1cbcd;
@@ -200,16 +207,11 @@
 .msg {
   background: #eef8ff;
   /* min-width: 50px; */
-  border-radius: 2px;
+  border-radius: 10px;
   word-break: break-all;
   padding: 8px 12px;
 }
-.other .msg {
-    align-self: flex-start;
-}
-.self .msg {
-    align-self: flex-end;
-}
+
 .user {
   font-size: 14px;
   /* margin: 0 0 2px 0; */

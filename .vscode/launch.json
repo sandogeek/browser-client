@@ -8,9 +8,10 @@
       "url": "http://localhost:4200/",
       "webRoot": "${workspaceFolder}",
       // "runtimeExecutable":"C:/Users/sando/AppData/Local/360Chrome/Chrome/Application/360chrome.exe",
-      // "runtimeArgs":[
-      //   "--remote-debugging-port=9222"
-      // ]
+      "runtimeArgs":[
+        // "http://localhost:4200/",
+        // "--remote-debugging-port=9222"
+      ]
     },
     // 来自：https://github.com/Microsoft/vscode-chrome-debug
     {
