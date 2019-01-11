@@ -7,8 +7,8 @@
 
 
   <!-- Start : Chat section -->
-  <div class="chat" appAutoScrollToBottom #anchor="scrollAnchor" [(autoScroll)]="autoScroll">
-    <ol (resized)="anchor.scrollToBottom()">
+  <div class="chat" appAutoScrollToBottom>
+    <ol>
       <li [ngClass]="{'self': message.author.id == user.id , 'other': message.author.id != user.id }" *ngFor="let message of source$ | async">
         <div class="user"><span class="user-name">{{ message.author.name }}</span></div>
         <div class="msg">
