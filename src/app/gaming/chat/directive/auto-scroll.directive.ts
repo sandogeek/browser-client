@@ -1,4 +1,5 @@
-import { Directive, Input, Output, EventEmitter, HostBinding, AfterViewInit, OnInit, ElementRef, NgZone, Renderer2 } from '@angular/core';
+import { Directive, Input, Output, EventEmitter, HostBinding,
+  AfterViewInit, OnInit, ElementRef, NgZone, HostListener } from '@angular/core';
 import { ResizedEvent } from '../model/ResizeEvent';
 
 
@@ -25,19 +26,16 @@ export class AutoScrollToBottomDirective implements AfterViewInit, OnInit {
   @HostBinding('style.overflow-y')
   overflowY = 'auto';
   private scrolling = false;
+  private maxDelta = 2;
 
   constructor(
     private element: ElementRef,
     private zone: NgZone,
-    private renderer: Renderer2,
   ) {
     this.scrollToBottomPreset = this.scrollToBottom;
   }
 
   ngOnInit(): void {
-    this.zone.runOutsideAngular(() => {
-        this.renderer.listen(this.element.nativeElement, 'scroll', () => this.onScroll());
-    });
   }
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -107,32 +105,30 @@ export class AutoScrollToBottomDirective implements AfterViewInit, OnInit {
     };
   }
 
+  @HostListener('scroll')
   onScroll = () => {
-    const maxDelta = 2;
     if (this.scrolling) {
-        return;
+      return;
     }
     const el = this.element.nativeElement;
     const bottom = el.scrollTop + el.offsetHeight;
     const height = el.scrollHeight;
-    const atBottom = height - bottom < maxDelta;
+    const atBottom = height - bottom < this.maxDelta;
     if (this.autoScroll !== atBottom) {
-        this.zone.run(() => {
-            this.autoScroll = atBottom;
-            this.autoScrollChange.emit(this.autoScroll);
-        });
+      this.zone.run(() => {
+        this.autoScroll = atBottom;
+        this.autoScrollChange.emit(this.autoScroll);
+      });
     }
   }
 
   scrollToBottom = (event: ResizedEvent) => {
     if (!this.autoScroll) {
-        return;
+      return;
     }
     const el = this.element.nativeElement;
-    setTimeout(() => {
-      el.scrollTop = el.scrollHeight - el.clientHeight;
-    });
+    el.scrollTop = el.scrollHeight - el.clientHeight;
     this.scrolling = true;
-    this.zone.runOutsideAngular(() => setTimeout(() => this.scrolling = false, 1000));
+    this.zone.runOutsideAngular(() => setTimeout(() => this.scrolling = false, 500));
   }
 }
