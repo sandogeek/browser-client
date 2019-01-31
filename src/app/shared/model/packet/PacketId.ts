@@ -1,5 +1,5 @@
 
-import { LoginAuthReq, LoginResultResp, CustomRoleUiInfoResp, MonsterUiInfoResp, RoleUiInfoResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, EnterWorldReq, ObjectDisappearResp, SwitchSceneReq, PingHeartBeat, PongHeartBeat, ChatMessage, ChatReq, ChatResp, SceneUiInfoResp } from '../proto/bundle';
+import { LoginAuthReq, LoginResultResp, CustomRoleUiInfoResp, MonsterUiInfoResp, RoleUiInfoResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, EnterWorldReq, ObjectDisappearResp, SwitchSceneReq, PingHeartBeat, PongHeartBeat, ChatMessage, ChatReq, ChatResp, GetPackContentReq, GetPackContentResp, UseItemReq, UseItemResp, SceneUiInfoResp } from '../proto/bundle';
 import { Type } from '@angular/core';
 import { Reader, Writer } from 'protobufjs';
 import { IPacket } from './IPacket';
@@ -61,6 +61,14 @@ export class PacketId {
     static readonly CHAT_REQ: number = 10101;
     /** 聊天响应*/
     static readonly CHAT_RESP: number = 10102;
+    /** 获取背包内容请求*/
+    static readonly GET_PACK_CONTENT_REQ: number = 10601;
+    /** 获取背包内容响应*/
+    static readonly GET_PACK_CONTENT_RESP: number = 10602;
+    /** 物品使用请求*/
+    static readonly USE_ITEM_REQ: number = 10603;
+    /** 使用物品响应*/
+    static readonly USE_ITEM_RESP: number = 10604;
     /** 场景信息响应包*/
     static readonly SCENE_UI_INFO_RESP: number = 10404;
     // end
@@ -90,6 +98,10 @@ export class PacketId {
         PacketId.put(PacketId.CHAT_MESSAGE, ChatMessage);
         PacketId.put(PacketId.CHAT_REQ, ChatReq);
         PacketId.put(PacketId.CHAT_RESP, ChatResp);
+        PacketId.put(PacketId.GET_PACK_CONTENT_REQ, GetPackContentReq);
+        PacketId.put(PacketId.GET_PACK_CONTENT_RESP, GetPackContentResp);
+        PacketId.put(PacketId.USE_ITEM_REQ, UseItemReq);
+        PacketId.put(PacketId.USE_ITEM_RESP, UseItemResp);
         PacketId.put(PacketId.SCENE_UI_INFO_RESP, SceneUiInfoResp);
         // end
     }
