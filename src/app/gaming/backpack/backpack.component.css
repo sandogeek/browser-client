@@ -1,16 +1,47 @@
 .wrapper {
     position: relative;
     height: 600px;
+    width: 480px;
+    border: 1px solid red;
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
     align-content: flex-start;
+    background-color: #efefef;
 }
-.head-example {
+.grid {
     width: 60px;
     height: 60px;
-    display: block;
-    border: 1px solid red;
-    margin: 6px 9px;
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 
+    background: #ccc;
+    margin: 6px 9px;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 16px;
+    position: relative;
+}
+.grid .string {
+  display: inline-block;
+  font-weight: bold;
+  color: rgb(51, 44, 44);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.grid .badge {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  font-size: 12px;
+  font-weight: bold;
+  color: rgba(95, 88, 88, 0.822);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}

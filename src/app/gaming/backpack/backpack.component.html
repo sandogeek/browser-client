@@ -1,29 +1,20 @@
 <div class="wrapper">
-  <nz-badge [nzCount]="5">
-    <a class="head-example"></a>
-  </nz-badge>
-  <nz-badge [nzCount]="5">
-    <a class="head-example"></a>
-  </nz-badge>
-  <nz-badge [nzCount]="5">
-    <a class="head-example"></a>
-  </nz-badge>
-  <nz-badge [nzCount]="5">
-    <a class="head-example"></a>
-  </nz-badge>
-  <nz-badge [nzCount]="5">
-    <a class="head-example"></a>
-  </nz-badge>
-  <nz-badge [nzCount]="5">
-    <a class="head-example"></a>
-  </nz-badge>
-  <nz-badge [nzCount]="5">
-    <a class="head-example"></a>
-  </nz-badge>
-  <nz-badge [nzCount]="5">
-    <a class="head-example"></a>
-  </nz-badge>
-  <nz-badge [nzCount]="5">
-    <a class="head-example"></a>
-  </nz-badge>
+  <span nz-tooltip nzTitle="contentTemplate" nzTrigger="click" class="grid">
+    <span class ="string">有点</span>
+    <span class="badge">16</span>
+    <ng-template #contentTemplate>
+      <div>
+        <p>Content</p>
+        <p>Content</p>
+      </div>
+    </ng-template>
+  </span>
+  <a class="grid"></a>
+  <a class="grid"></a>
+  <a class="grid"></a>
+  <a class="grid"></a>
+  <a class="grid"></a>
+  <a class="grid"></a>
+  <a class="grid"></a>
+  <a class="grid"></a>
 </div>
