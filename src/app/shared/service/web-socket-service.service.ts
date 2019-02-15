@@ -148,15 +148,13 @@ export class WebSocketService {
       console.error(`PacketId中不存在id为${packetId}的包`);
     }
     const obj = messageClass.decode(data);
-    // console.log(`接收到的包：packetId[${packetId}] 类名[${messageClass.name}] 内容\n${JSON.stringify(obj)}`);
-    // this.subscribers.forEach((value, index, subscribers) => {
+    console.log(`接收到的包：packetId[${packetId}] 类名[${messageClass.name}] 内容\n${JSON.stringify(obj)}`);
     const nextData = {
       packetId: packetId,
       clazz : messageClass,
       resp: obj
     };
     subscriber.next(nextData);
-    // });
   }
   // 正常地断开与服务器的连接
   disconnect = () => {
@@ -166,9 +164,6 @@ export class WebSocketService {
   }
   // 向服务器端发送消息
   sendPacket = (messageClass: IPacket, obj: any): void => {
-    // if (messageClass !== PingHeartBeat) {
-    //   this.resetTimeout();
-    // }
     // 获取请求包packetId
     const id = PacketId.class2PacketId.get(messageClass);
     // 参数校验

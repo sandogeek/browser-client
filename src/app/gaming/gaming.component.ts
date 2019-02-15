@@ -12,6 +12,8 @@ import { ChatComponent } from './chat/chat.component';
 import { MailComponent } from './mail/mail.component';
 import { ShopComponent } from './shop/shop.component';
 import { ChatService } from './chat/service/chat.service';
+import { BackpackService } from './backpack/service/backpack.service';
+import { PacketId } from '../shared/model/packet/PacketId';
 
 @Component({
   selector: 'app-gaming',
@@ -27,6 +29,9 @@ export class GamingComponent implements OnInit {
 
   isToggle = false;
   equipSelected = false;
+
+  packetId: number;
+  content: string;
 
   selfInfo = [
     `昵称：${this.myName}`,
@@ -69,6 +74,7 @@ export class GamingComponent implements OnInit {
     private modalService: NzModalService,
     // 提前创建聊天服务
     private chatService: ChatService,
+    private backpackService: BackpackService,
   ) {
     this.wsService.observable.subscribe(this.infoObserver);
     this.wsService.observable.subscribe(this.objectDisappearObserver);
@@ -139,6 +145,11 @@ export class GamingComponent implements OnInit {
       },
       nzFooter: null
     });
+  }
+
+  send = () => {
+    const clazz = PacketId.packetId2Class.get(this.packetId);
+    this.wsService.sendPacket(clazz, JSON.parse(this.content));
   }
 
   ngOnInit() {

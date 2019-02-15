@@ -1,20 +1,13 @@
 <div class="wrapper">
-  <span nz-tooltip nzTitle="contentTemplate" nzTrigger="click" class="grid">
-    <span class ="string">有点</span>
-    <span class="badge">16</span>
+  <a nz-popover [(nzVisible)]="visibles[i]" [nzContent]="contentTemplate" nzTrigger="click" class="grid" *ngFor = "let itemInfo of itemList;index as i">
+    <span class ="string">{{itemInfo.name}}</span>
+    <span class="badge" *ngIf = "itemInfo.amount !== 1">{{itemInfo.amount}}</span>
     <ng-template #contentTemplate>
       <div>
-        <p>Content</p>
-        <p>Content</p>
+        <p>{{itemInfo.name}}</p>
+        <button nz-button (click)="useNormalItem(itemInfo)" *ngIf = "isNormalItem(itemInfo)" nzType ="default">使用</button>
+        <button nz-button (click)="equipItem(itemInfo)" *ngIf = "isEquip(itemInfo)" nzType ="default">装备</button>
       </div>
     </ng-template>
-  </span>
-  <a class="grid"></a>
-  <a class="grid"></a>
-  <a class="grid"></a>
-  <a class="grid"></a>
-  <a class="grid"></a>
-  <a class="grid"></a>
-  <a class="grid"></a>
-  <a class="grid"></a>
+  </a>
 </div>

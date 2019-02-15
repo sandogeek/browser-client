@@ -26,6 +26,13 @@
     </ul>
   </nz-sider>
   <nz-content>
+    <nz-input-group nzCompact [nzSuffix]="suffixButton">
+      <nz-input-number [(ngModel)]="packetId" [nzMin]="10000" [nzPlaceHolder]="'包id'"></nz-input-number>
+      <textarea nz-input placeholder="包内容" [(ngModel)]="content" [nzAutosize]="{ minRows: 1, maxRows: 10 }" style="width:73%;"></textarea>
+    </nz-input-group>
+    <ng-template #suffixButton>
+      <button nz-button nzType="primary" (click)="send()">发包</button>
+    </ng-template>
     <h3>当前所在场景:<span style="color:crimson">{{ currentSceneName }}</span></h3>
     <div nz-row nzGutter="16" nzType="flex" nzJustify="center">
       <div nz-col class="gutter-row" nzXs="10" nzSm="10" nzMd="10" nzLg="8" nzXl="6">
@@ -80,12 +87,6 @@
           <td>{{role.name}}</td>
           <td>{{role.roleTypeName}}</td>
           <td>{{role.level}}</td>
-          <!-- <td>
-            <nz-button-group>
-              <button nz-button (click)="chooseRole(role.roleId)">选择</button>
-              <button nz-button (click)="deleteRole(role.roleId)">删除</button>
-            </nz-button-group>
-          </td> -->
         </tr>
       </tbody>
     </nz-table>

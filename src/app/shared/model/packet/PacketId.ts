@@ -106,8 +106,8 @@ export class PacketId {
         // end
     }
 
-    static put(packetId: number, classtName: any) {
-        PacketId.class2PacketId.set(classtName, packetId);
-        PacketId.packetId2Class.set(packetId, classtName);
+    static put<T extends IPacket>(packetId: number, clazz: T) {
+        PacketId.class2PacketId.set(clazz, packetId);
+        PacketId.packetId2Class.set(packetId, clazz);
     }
 }
