@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { WebSocketService, CustomMessage } from '../shared/service/web-socket-service.service';
 import { PartialObserver } from 'rxjs';
 import {  EnterWorldReq, RoleUiInfoResp,
-  ObjectDisappearResp, SceneUiInfoResp, ISceneCanGoInfo, SwitchSceneReq } from '../shared/model/proto/bundle';
+  ObjectDisappearResp, SceneUiInfoResp, ISceneCanGoInfo, SwitchSceneReq, MonsterUiInfoResp } from '../shared/model/proto/bundle';
 import { Role } from '../choose-role/model/Role';
 import { RoleService } from '../shared/service/role.service';
 import { NzModalService } from 'ng-zorro-antd';
@@ -22,6 +22,7 @@ import { PacketId } from '../shared/model/packet/PacketId';
 })
 export class GamingComponent implements OnInit {
   roles: Array<Role> = new Array();
+  monsters: Array<MonsterUiInfoResp> = new Array();
   sceneCanGoInfos: Array<ISceneCanGoInfo> = new Array();
   sceneId: number;
   currentSceneName: string;
@@ -53,6 +54,9 @@ export class GamingComponent implements OnInit {
         this.sceneId = sceneUiInfo.sceneId;
         this.currentSceneName = sceneUiInfo.sceneName;
         this.sceneCanGoInfos = sceneUiInfo.sceneCanGoInfos;
+      } else if (message.clazz === MonsterUiInfoResp) {
+        const resp = <MonsterUiInfoResp>message.resp;
+        this.monsters = [...this.monsters, resp];
       }
     },
     error: err => console.log(err),
@@ -83,6 +87,7 @@ export class GamingComponent implements OnInit {
 
   switchTo = (sceneId: number) => {
     this.roles = new Array();
+    this.monsters = new Array();
     this.wsService.sendPacket(SwitchSceneReq, {targetSceneId: sceneId});
   }
 

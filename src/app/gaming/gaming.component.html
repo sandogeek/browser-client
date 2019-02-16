@@ -90,6 +90,28 @@
         </tr>
       </tbody>
     </nz-table>
+    <nz-table 
+    #monsterTable
+    nzBordered
+    nzTitle="当前场景的怪物"
+    nzSize="middle"
+    nzFrontPagination="false"
+    nzShowPagination="false"
+    [nzData]="monsters">
+      <thead>
+        <tr>
+          <th>怪物名称</th>
+          <th>血量/最大血量</th>
+          <!-- <th>功能区</th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let monster of monsterTable.data">
+          <td>{{monster.name}}</td>
+          <td>{{monster.currentHp}}/{{monster.maxHp}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
   </nz-content>
 </nz-layout>
 
