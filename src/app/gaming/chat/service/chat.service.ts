@@ -47,7 +47,6 @@ export class ChatService {
   }
 
   getMessagesSource = () => {
-    // return this.worldFeed;
     return merge(
       from(this.worldMessage),
       this.messagesSource$
@@ -59,10 +58,6 @@ export class ChatService {
         return [...acc, x];
       }, [])
     );
-    // const historyMessage = new Array<Message>();
-    // historyMessage.push(...this.worldMessage);
-    // this.messagesSource$.next(historyMessage);
-    // return this.messagesSource$;
   }
 
   // get worldMessages() {

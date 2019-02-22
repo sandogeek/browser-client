@@ -12,7 +12,7 @@ import { WebSocketService } from 'src/app/shared/service/web-socket-service.serv
 })
 export class BackpackComponent implements OnInit {
   itemList: Array<IItemUiInfo>;
-  visibles: Array<boolean>;
+  // visibles: Array<boolean>;
   ItemType = ItemType;
 
   constructor(
@@ -21,7 +21,6 @@ export class BackpackComponent implements OnInit {
     private wsService: WebSocketService,
   ) {
     this.itemList = packService.itemList;
-    this.visibles = new Array(this.itemList.length);
   }
 
   useNormalItem = (itemInfo: IItemUiInfo) => {

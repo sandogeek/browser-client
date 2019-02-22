@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <a nz-popover [(nzVisible)]="visibles[i]" [nzContent]="contentTemplate" nzTrigger="click" class="grid" *ngFor = "let itemInfo of itemList;index as i">
+  <a nz-popover [nzContent]="contentTemplate" nzTrigger="click" class="grid" *ngFor = "let itemInfo of itemList;index as i">
     <span class ="string">{{itemInfo.name}}</span>
     <span class="badge" *ngIf = "itemInfo.amount !== 1">{{itemInfo.amount}}</span>
     <ng-template #contentTemplate>
