@@ -2,8 +2,8 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { WebSocketService, CustomMessage } from '../shared/service/web-socket-service.service';
 import { PartialObserver } from 'rxjs';
 import {  EnterWorldReq, RoleUiInfoResp,
-  ObjectDisappearResp, SceneUiInfoResp, ISceneCanGoInfo, SwitchSceneReq, MonsterUiInfoResp } from '../shared/model/proto/bundle';
-import { Role } from '../choose-role/model/Role';
+  ObjectDisappearResp, SceneUiInfoResp, ISceneCanGoInfo, SwitchSceneReq, MonsterUiInfoResp, CustomRoleUiInfoResp } from '../shared/model/proto/bundle';
+import { Role, CustomRole } from '../choose-role/model/Role';
 import { RoleService } from '../shared/service/role.service';
 import { NzModalService } from 'ng-zorro-antd';
 import { BackpackComponent } from './backpack/backpack.component';
@@ -14,6 +14,7 @@ import { ShopComponent } from './shop/shop.component';
 import { ChatService } from './chat/service/chat.service';
 import { BackpackService } from './backpack/service/backpack.service';
 import { PacketId } from '../shared/model/packet/PacketId';
+import * as Long from 'long';
 
 @Component({
   selector: 'app-gaming',
@@ -21,8 +22,8 @@ import { PacketId } from '../shared/model/packet/PacketId';
   styleUrls: ['./gaming.component.css']
 })
 export class GamingComponent implements OnInit {
-  roles: Array<Role> = new Array();
-  monsters: Array<MonsterUiInfoResp> = new Array();
+  rolesMap: Map<number|Long, CustomRole> = new Map();
+  monstersMap: Map<number|Long, MonsterUiInfoResp> = new Map();
   sceneCanGoInfos: Array<ISceneCanGoInfo> = new Array();
   sceneId: number;
   currentSceneName: string;
@@ -45,18 +46,19 @@ export class GamingComponent implements OnInit {
   infoObserver: PartialObserver<CustomMessage> = {
     next : message => {
       // console.log(`${JSON.stringify(message.resp)}`);
-      if (message.clazz === RoleUiInfoResp) {
-        const roleUiInfoResp = <RoleUiInfoResp>message.resp;
-        const role: Role = {...roleUiInfoResp, roleTypeName: null};
-        this.roles = [ ...this.roles, role];
-      } else if (message.clazz === SceneUiInfoResp) {
+      // if (message.clazz === RoleUiInfoResp) {
+      //   const roleUiInfoResp = <RoleUiInfoResp>message.resp;
+      //   const role: Role = {...roleUiInfoResp, roleTypeName: null};
+      //   this.roles = [ ...this.roles, role];
+      // } else
+      if (message.clazz === SceneUiInfoResp) {
         const sceneUiInfo = <SceneUiInfoResp>message.resp;
         this.sceneId = sceneUiInfo.sceneId;
         this.currentSceneName = sceneUiInfo.sceneName;
         this.sceneCanGoInfos = sceneUiInfo.sceneCanGoInfos;
       } else if (message.clazz === MonsterUiInfoResp) {
         const resp = <MonsterUiInfoResp>message.resp;
-        this.monsters = [...this.monsters, resp];
+        this.monstersMap.set(resp.objId, resp);
       }
     },
     error: err => console.log(err),
@@ -67,7 +69,24 @@ export class GamingComponent implements OnInit {
     next : message => {
       if (message.clazz === ObjectDisappearResp) {
         const objectDisappearResp = <ObjectDisappearResp>message.resp;
-        this.roles = this.roles.filter(role => role.roleId !== objectDisappearResp.id);
+        this.rolesMap.delete(objectDisappearResp.id);
+        // this.roles = this.roles.filter(role => role.roleId !== );
+      }
+    },
+    error: err => console.log(err)
+  };
+
+  selfInfoUpdate$: PartialObserver<CustomMessage> = {
+    next : message => {
+      if (message.clazz === CustomRoleUiInfoResp) {
+        const resp = <CustomRoleUiInfoResp>message.resp;
+        const customRole: CustomRole = {...resp,
+        roleTypeName: Role.getRoleTypeNameByType(resp.roleType)};
+        if (resp.roleId === this.roleService.selectedRole.roleId) {
+          this.roleService.selectedRole = customRole;
+        } else {
+          this.rolesMap.set(resp.roleId, customRole);
+        }
       }
     },
     error: err => console.log(err)
@@ -82,12 +101,13 @@ export class GamingComponent implements OnInit {
   ) {
     this.wsService.observable.subscribe(this.infoObserver);
     this.wsService.observable.subscribe(this.objectDisappearObserver);
+    this.wsService.observable.subscribe(this.selfInfoUpdate$);
     wsService.sendPacket(EnterWorldReq, {});
   }
 
   switchTo = (sceneId: number) => {
-    this.roles = new Array();
-    this.monsters = new Array();
+    this.rolesMap = new Map();
+    this.monstersMap = new Map();
     this.wsService.sendPacket(SwitchSceneReq, {targetSceneId: sceneId});
   }
 
@@ -158,6 +178,12 @@ export class GamingComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+  get roles() {
+    return [...this.rolesMap.values()];
+  }
+  get monsters() {
+    return [...this.monstersMap.values()];
   }
   get myName() {
     return this.roleService.selectedRole.name;

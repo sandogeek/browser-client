@@ -79,6 +79,8 @@
           <th>角色昵称</th>
           <th>角色类型</th>
           <th>等级</th>
+          <th>血量/最大血量</th>
+          <th>蓝量/最大蓝量</th>
           <!-- <th>功能区</th> -->
         </tr>
       </thead>
@@ -87,6 +89,8 @@
           <td>{{role.name}}</td>
           <td>{{role.roleTypeName}}</td>
           <td>{{role.level}}</td>
+          <td>{{role.currentHp}}/{{role.maxHp}}</td>
+          <td>{{role.currentMp}}/{{role.maxMp}}</td>
         </tr>
       </tbody>
     </nz-table>
