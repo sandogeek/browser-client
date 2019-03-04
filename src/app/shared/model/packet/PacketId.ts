@@ -1,5 +1,5 @@
 
-import { LoginAuthReq, LoginResultResp, CustomRoleUiInfoResp, MonsterUiInfoResp, RoleUiInfoResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, EnterWorldReq, ObjectDisappearResp, SwitchSceneReq, PingHeartBeat, PongHeartBeat, ChatMessage, ChatReq, ChatResp, GlobalMessage, GetPackContentReq, GetPackContentResp, ItemAddResp, UseItemReq, UseItemResp, UseSkillReq, SceneUiInfoResp } from '../proto/bundle';
+import { LoginAuthReq, LoginResultResp, CustomRoleUiInfoResp, MonsterUiInfoResp, RoleUiInfoResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, EnterWorldReq, ObjectDisappearResp, SwitchSceneReq, PingHeartBeat, PongHeartBeat, ChatMessage, ChatReq, ChatResp, GlobalMessage, GetPackContentReq, GetPackContentResp, ItemAddResp, UseItemReq, UseItemResp, CurrentHpUpdate, CurrentMpUpdate, ExpUpdate, LevelUpdate, MaxHpUpdate, MaxMpUpdate, UseSkillReq, SceneUiInfoResp } from '../proto/bundle';
 import { Type } from '@angular/core';
 import { Reader, Writer } from 'protobufjs';
 import { IPacket } from './IPacket';
@@ -73,6 +73,18 @@ export class PacketId {
     static readonly USE_ITEM_REQ: number = 10603;
     /** 使用物品响应*/
     static readonly USE_ITEM_RESP: number = 10604;
+    /** 当前血量更新包*/
+    static readonly CURRENT_HP_UPDATE: number = 10309;
+    /** 当前蓝量更新包*/
+    static readonly CURRENT_MP_UPDATE: number = 10310;
+    /** 经验属性更新包*/
+    static readonly EXP_UPDATE: number = 10314;
+    /** 等级属性更新包*/
+    static readonly LEVEL_UPDATE: number = 10313;
+    /** 最大血量更新包*/
+    static readonly MAX_HP_UPDATE: number = 10311;
+    /** 最大蓝量更新包*/
+    static readonly MAX_MP_UPDATE: number = 10312;
     /** 使用技能请求*/
     static readonly USE_SKILL_REQ: number = 10701;
     /** 场景信息响应包*/
@@ -110,6 +122,12 @@ export class PacketId {
         PacketId.put(PacketId.ITEM_ADD_RESP, ItemAddResp);
         PacketId.put(PacketId.USE_ITEM_REQ, UseItemReq);
         PacketId.put(PacketId.USE_ITEM_RESP, UseItemResp);
+        PacketId.put(PacketId.CURRENT_HP_UPDATE, CurrentHpUpdate);
+        PacketId.put(PacketId.CURRENT_MP_UPDATE, CurrentMpUpdate);
+        PacketId.put(PacketId.EXP_UPDATE, ExpUpdate);
+        PacketId.put(PacketId.LEVEL_UPDATE, LevelUpdate);
+        PacketId.put(PacketId.MAX_HP_UPDATE, MaxHpUpdate);
+        PacketId.put(PacketId.MAX_MP_UPDATE, MaxMpUpdate);
         PacketId.put(PacketId.USE_SKILL_REQ, UseSkillReq);
         PacketId.put(PacketId.SCENE_UI_INFO_RESP, SceneUiInfoResp);
         // end

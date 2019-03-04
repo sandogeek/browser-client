@@ -87,9 +87,12 @@ export class ChooseRoleComponent implements OnInit {
       if (message.clazz === ChooseRoleResp) {
         const chooseRoleResp = <ChooseRoleResp>message.resp;
         if (chooseRoleResp.result) {
-          const customRole: CustomRole = {...chooseRoleResp.customRoleUiInfoResp,
-            roleTypeName: Role.getRoleTypeNameByType(chooseRoleResp.customRoleUiInfoResp.roleType)};
-          this.roleService.selectedRole = customRole;
+          const uiResp = chooseRoleResp.roleUiInfoResp;
+          const selectedRole = this.roleService.selectedRole;
+          selectedRole.roleId = uiResp.roleId;
+          selectedRole.name = uiResp.name;
+          selectedRole.level = uiResp.level;
+          selectedRole.roleType = uiResp.roleType;
           this.wsService.state = GameState.GAMING;
           this.router.navigate(['/gaming']);
         }
