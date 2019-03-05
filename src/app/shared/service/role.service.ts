@@ -2,20 +2,24 @@ import { Injectable } from '@angular/core';
 import { CustomRole } from 'src/app/choose-role/model/Role';
 import { PartialObserver } from 'rxjs';
 import { CustomMessage, WebSocketService } from './web-socket-service.service';
-import { CurrentHpUpdate, CurrentMpUpdate, MaxHpUpdate, MaxMpUpdate } from '../model/proto/bundle';
+import { CurrentHpUpdate, CurrentMpUpdate, MaxHpUpdate, MaxMpUpdate, LevelUpdate, MonsterUiInfoResp, MonsterHpUpdate, MonsterMaxHpUpdate } from '../model/proto/bundle';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleService {
   selectedRole: CustomRole = new CustomRole();
+  rolesMap: Map<string, CustomRole> = new Map();
+  monstersMap: Map<string, MonsterUiInfoResp> = new Map();
 
   private currentHpUpdateObserver: PartialObserver<CustomMessage> = {
     next : message => {
       if (message.clazz === CurrentHpUpdate) {
         const resp = <CurrentHpUpdate>message.resp;
-        if (this.selectedRole.roleId === undefined || resp.roleId === this.selectedRole.roleId) {
+        if (this.selectedRole.roleId == null || resp.roleId === this.selectedRole.roleId) {
           this.selectedRole.currentHp = resp.currentHp;
+        } else if (this.rolesMap.has(resp.roleId.toString())) {
+          this.rolesMap.get(resp.roleId.toString()).currentHp = resp.currentHp;
         }
       }
     },
@@ -25,8 +29,10 @@ export class RoleService {
     next : message => {
       if (message.clazz === CurrentMpUpdate) {
         const resp = <CurrentMpUpdate>message.resp;
-        if (this.selectedRole.roleId === undefined || resp.roleId === this.selectedRole.roleId) {
+        if (this.selectedRole.roleId == null || resp.roleId === this.selectedRole.roleId) {
           this.selectedRole.currentMp = resp.currentMp;
+        } else if (this.rolesMap.has(resp.roleId.toString())) {
+          this.rolesMap.get(resp.roleId.toString()).currentMp = resp.currentMp;
         }
       }
     },
@@ -36,8 +42,10 @@ export class RoleService {
     next : message => {
       if (message.clazz === MaxHpUpdate) {
         const resp = <MaxHpUpdate>message.resp;
-        if (this.selectedRole.roleId === undefined || resp.roleId === this.selectedRole.roleId) {
+        if (this.selectedRole.roleId == null || resp.roleId === this.selectedRole.roleId) {
           this.selectedRole.maxHp = resp.maxHp;
+        } else if (this.rolesMap.has(resp.roleId.toString())) {
+          this.rolesMap.get(resp.roleId.toString()).maxHp = resp.maxHp;
         }
       }
     },
@@ -47,9 +55,42 @@ export class RoleService {
     next : message => {
       if (message.clazz === MaxMpUpdate) {
         const resp = <MaxMpUpdate>message.resp;
-        if (this.selectedRole.roleId === undefined || resp.roleId === this.selectedRole.roleId) {
+        if (this.selectedRole.roleId == null || resp.roleId === this.selectedRole.roleId) {
           this.selectedRole.maxMp = resp.maxMp;
+        } else if (this.rolesMap.has(resp.roleId.toString())) {
+          this.rolesMap.get(resp.roleId.toString()).maxMp = resp.maxMp;
         }
+      }
+    },
+    error: err => console.log(err)
+  };
+  private levelUpdateObserver: PartialObserver<CustomMessage> = {
+    next : message => {
+      if (message.clazz === MaxMpUpdate) {
+        const resp = <LevelUpdate>message.resp;
+        if (this.selectedRole.roleId == null || resp.roleId === this.selectedRole.roleId) {
+          this.selectedRole.level = resp.level;
+        } else if (this.rolesMap.has(resp.roleId.toString())) {
+          this.rolesMap.get(resp.roleId.toString()).level = resp.level;
+        }
+      }
+    },
+    error: err => console.log(err)
+  };
+  private monsterHpObserver: PartialObserver<CustomMessage> = {
+    next : message => {
+      if (message.clazz === MonsterHpUpdate) {
+        const resp = <MonsterHpUpdate>message.resp;
+        this.monstersMap.get(resp.objId.toString()).currentHp = resp.hp;
+      }
+    },
+    error: err => console.log(err)
+  };
+  private monsterMaxHpObserver: PartialObserver<CustomMessage> = {
+    next : message => {
+      if (message.clazz === MonsterMaxHpUpdate) {
+        const resp = <MonsterMaxHpUpdate>message.resp;
+        this.monstersMap.get(resp.objId.toString()).maxHp = resp.maxHp;
       }
     },
     error: err => console.log(err)
@@ -62,5 +103,8 @@ export class RoleService {
     this.wsService.observable.subscribe(this.currentMpUpdateObserver);
     this.wsService.observable.subscribe(this.maxHpUpdateObserver);
     this.wsService.observable.subscribe(this.maxMpUpdateObserver);
+    this.wsService.observable.subscribe(this.levelUpdateObserver);
+    this.wsService.observable.subscribe(this.monsterHpObserver);
+    this.wsService.observable.subscribe(this.monsterMaxHpObserver);
   }
 }

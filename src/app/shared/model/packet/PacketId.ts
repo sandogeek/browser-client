@@ -1,5 +1,5 @@
 
-import { LoginAuthReq, LoginResultResp, CustomRoleUiInfoResp, MonsterUiInfoResp, RoleUiInfoResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, EnterWorldReq, ObjectDisappearResp, SwitchSceneReq, PingHeartBeat, PongHeartBeat, ChatMessage, ChatReq, ChatResp, GlobalMessage, GetPackContentReq, GetPackContentResp, ItemAddResp, UseItemReq, UseItemResp, CurrentHpUpdate, CurrentMpUpdate, ExpUpdate, LevelUpdate, MaxHpUpdate, MaxMpUpdate, UseSkillReq, SceneUiInfoResp } from '../proto/bundle';
+import { LoginAuthReq, LoginResultResp, CustomRoleUiInfoResp, MonsterUiInfoResp, RoleUiInfoResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, EnterWorldReq, ObjectDisappearResp, SwitchSceneReq, PingHeartBeat, PongHeartBeat, ChatMessage, ChatReq, ChatResp, GlobalMessage, GetPackContentReq, GetPackContentResp, ItemAddResp, UseItemReq, UseItemResp, MonsterHpUpdate, MonsterMaxHpUpdate, CurrentHpUpdate, CurrentMpUpdate, ExpUpdate, LevelUpdate, MaxHpUpdate, MaxMpUpdate, UseSkillReq, SceneUiInfoResp } from '../proto/bundle';
 import { Type } from '@angular/core';
 import { Reader, Writer } from 'protobufjs';
 import { IPacket } from './IPacket';
@@ -73,6 +73,10 @@ export class PacketId {
     static readonly USE_ITEM_REQ: number = 10603;
     /** 使用物品响应*/
     static readonly USE_ITEM_RESP: number = 10604;
+    /** 怪物血量更新*/
+    static readonly MONSTER_HP_UPDATE: number = 10504;
+    /** 怪物最大血量更新*/
+    static readonly MONSTER_MAX_HP_UPDATE: number = 10505;
     /** 当前血量更新包*/
     static readonly CURRENT_HP_UPDATE: number = 10309;
     /** 当前蓝量更新包*/
@@ -122,6 +126,8 @@ export class PacketId {
         PacketId.put(PacketId.ITEM_ADD_RESP, ItemAddResp);
         PacketId.put(PacketId.USE_ITEM_REQ, UseItemReq);
         PacketId.put(PacketId.USE_ITEM_RESP, UseItemResp);
+        PacketId.put(PacketId.MONSTER_HP_UPDATE, MonsterHpUpdate);
+        PacketId.put(PacketId.MONSTER_MAX_HP_UPDATE, MonsterMaxHpUpdate);
         PacketId.put(PacketId.CURRENT_HP_UPDATE, CurrentHpUpdate);
         PacketId.put(PacketId.CURRENT_MP_UPDATE, CurrentMpUpdate);
         PacketId.put(PacketId.EXP_UPDATE, ExpUpdate);

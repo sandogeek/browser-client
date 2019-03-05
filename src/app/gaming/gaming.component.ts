@@ -22,8 +22,7 @@ import * as Long from 'long';
   styleUrls: ['./gaming.component.css']
 })
 export class GamingComponent implements OnInit {
-  rolesMap: Map<number|Long, CustomRole> = new Map();
-  monstersMap: Map<number|Long, MonsterUiInfoResp> = new Map();
+
   sceneCanGoInfos: Array<ISceneCanGoInfo> = new Array();
   sceneId: number;
   currentSceneName: string;
@@ -45,12 +44,6 @@ export class GamingComponent implements OnInit {
 
   infoObserver: PartialObserver<CustomMessage> = {
     next : message => {
-      // console.log(`${JSON.stringify(message.resp)}`);
-      // if (message.clazz === RoleUiInfoResp) {
-      //   const roleUiInfoResp = <RoleUiInfoResp>message.resp;
-      //   const role: Role = {...roleUiInfoResp, roleTypeName: null};
-      //   this.roles = [ ...this.roles, role];
-      // } else
       if (message.clazz === SceneUiInfoResp) {
         const sceneUiInfo = <SceneUiInfoResp>message.resp;
         this.sceneId = sceneUiInfo.sceneId;
@@ -58,7 +51,7 @@ export class GamingComponent implements OnInit {
         this.sceneCanGoInfos = sceneUiInfo.sceneCanGoInfos;
       } else if (message.clazz === MonsterUiInfoResp) {
         const resp = <MonsterUiInfoResp>message.resp;
-        this.monstersMap.set(resp.objId, resp);
+        this.monstersMap.set(resp.objId.toString(), resp);
       }
     },
     error: err => console.log(err),
@@ -69,7 +62,9 @@ export class GamingComponent implements OnInit {
     next : message => {
       if (message.clazz === ObjectDisappearResp) {
         const objectDisappearResp = <ObjectDisappearResp>message.resp;
-        this.rolesMap.delete(objectDisappearResp.id);
+        if (!this.rolesMap.delete(objectDisappearResp.id.toString())) {
+          console.error(`角色删除失败`);
+        }
         // this.roles = this.roles.filter(role => role.roleId !== );
       }
     },
@@ -85,7 +80,7 @@ export class GamingComponent implements OnInit {
         if (resp.roleId === this.roleService.selectedRole.roleId) {
           this.roleService.selectedRole = customRole;
         } else {
-          this.rolesMap.set(resp.roleId, customRole);
+          this.rolesMap.set(resp.roleId.toString(), customRole);
         }
       }
     },
@@ -119,20 +114,6 @@ export class GamingComponent implements OnInit {
       },
       nzFooter: null
     });
-    // modal.afterOpen.subscribe(() => console.log('[afterOpen] emitted!'));
-
-    // Return a result when closed
-    // modal.afterClose.subscribe((result) => {
-    //   console.log(`${this.isToggle}`);
-    //   this.isToggle = true;
-    //   // this.isToggle = false;
-    // });
-
-    // delay until modal instance created
-    // window.setTimeout(() => {
-    //   const instance = modal.getContentComponent();
-    //   instance.subtitle = 'sub title is changed';
-    // }, 2000);
   }
   showEquip = () => {
     const modal = this.modalService.create({
@@ -182,6 +163,21 @@ export class GamingComponent implements OnInit {
   get roles() {
     return [...this.rolesMap.values()];
   }
+  get rolesMap() {
+    return this.roleService.rolesMap;
+  }
+  set rolesMap(rolesMap: Map<string, CustomRole>) {
+    this.roleService.rolesMap = rolesMap;
+  }
+
+  get monstersMap() {
+    return this.roleService.monstersMap;
+  }
+  set monstersMap(monstersMap: Map<string, MonsterUiInfoResp>) {
+    this.roleService.monstersMap = monstersMap;
+  }
+
+
   get monsters() {
     return [...this.monstersMap.values()];
   }
