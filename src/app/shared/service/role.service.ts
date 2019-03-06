@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { CustomRole } from 'src/app/choose-role/model/Role';
 import { PartialObserver } from 'rxjs';
 import { CustomMessage, WebSocketService } from './web-socket-service.service';
-import { CurrentHpUpdate, CurrentMpUpdate, MaxHpUpdate, MaxMpUpdate, LevelUpdate, MonsterUiInfoResp, MonsterHpUpdate, MonsterMaxHpUpdate } from '../model/proto/bundle';
+import { CurrentHpUpdate, CurrentMpUpdate, MaxHpUpdate, MaxMpUpdate, LevelUpdate, MonsterUiInfoResp, MonsterHpUpdate, MonsterMaxHpUpdate, GlobalMessage, GlobalMessageType } from '../model/proto/bundle';
+import { NzMessageService } from 'ng-zorro-antd';
 
 @Injectable({
   providedIn: 'root'
@@ -96,8 +97,39 @@ export class RoleService {
     error: err => console.log(err)
   };
 
+  private globalMessageObserver: PartialObserver<CustomMessage> = {
+    next : message => {
+      if (message.clazz === GlobalMessage) {
+        const resp = <GlobalMessage>message.resp;
+        switch (resp.globalMessageType) {
+          case GlobalMessageType.SUCCESS : {
+            this.msgService.success(`${resp.message}`);
+            break;
+          }
+          case GlobalMessageType.ERROR : {
+            this.msgService.error(`${resp.message}`);
+            break;
+          }
+          case GlobalMessageType.INFO : {
+            this.msgService.info(`${resp.message}`);
+            break;
+          }
+          case GlobalMessageType.WARNING : {
+            this.msgService.warning(`${resp.message}`);
+            break;
+          }
+          default : {
+            console.error(`未知类型`);
+          }
+        }
+      }
+    },
+    error: err => console.log(err)
+  };
+
   constructor(
     private wsService: WebSocketService,
+    private msgService: NzMessageService
   ) {
     this.wsService.observable.subscribe(this.currentHpUpdateObserver);
     this.wsService.observable.subscribe(this.currentMpUpdateObserver);
