@@ -54,9 +54,29 @@
           <nz-card nzTitle="个人信息">
             <nz-list [nzDataSource]="selfInfo" [nzRenderItem]="item">
               <ng-template #item let-item>
-                <nz-list-item [nzContent]="nzContent">
-                  <ng-template #nzContent>
-                    {{item}}
+                <nz-list-item [nzContent]="name">
+                  <ng-template #name>
+                    昵称：{{item.myName}}
+                  </ng-template>
+                </nz-list-item>
+                <nz-list-item [nzContent]="type">
+                  <ng-template #type>
+                    角色类型：{{item.myRoleTypeName}}
+                  </ng-template>
+                </nz-list-item>
+                <nz-list-item [nzContent]="level">
+                  <ng-template #level>
+                    等级：{{item.myLevel}}
+                  </ng-template>
+                </nz-list-item>
+                <nz-list-item [nzContent]="hp">
+                  <ng-template #hp>
+                    当前/最大血量：{{item.myCurrentHp}}/{{item.myMaxHp}}
+                  </ng-template>
+                </nz-list-item>
+                <nz-list-item [nzContent]="mp">
+                  <ng-template #mp>
+                    当前/最大蓝量：{{item.myCurrentMp}}/{{item.myMaxMp}}
                   </ng-template>
                 </nz-list-item>
               </ng-template>
@@ -81,7 +101,7 @@
           <th>等级</th>
           <th>血量/最大血量</th>
           <th>蓝量/最大蓝量</th>
-          <!-- <th>功能区</th> -->
+          <th>功能区</th>
         </tr>
       </thead>
       <tbody>
@@ -91,6 +111,12 @@
           <td>{{role.level}}</td>
           <td>{{role.currentHp}}/{{role.maxHp}}</td>
           <td>{{role.currentMp}}/{{role.maxMp}}</td>
+          <td>
+            <button nz-button (click) = "useSkill(role.roleId)" >发起</button>
+            <nz-select style="width: 100px;" [(ngModel)]="selectedSkillId">
+              <nz-option *ngFor="let skill of skillList" [nzValue]="skill.skillId" [nzLabel]="skill.skillName"></nz-option>
+            </nz-select>
+          </td>
         </tr>
       </tbody>
     </nz-table>
@@ -106,13 +132,19 @@
         <tr>
           <th>怪物名称</th>
           <th>血量/最大血量</th>
-          <!-- <th>功能区</th> -->
+          <th>功能区</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let monster of monsterTable.data">
           <td>{{monster.name}}</td>
           <td>{{monster.currentHp}}/{{monster.maxHp}}</td>
+          <td>
+            <button nz-button (click) = "useSkill(monster.objId)" >发起</button>
+            <nz-select style="width: 100px;" [(ngModel)]="selectedSkillId">
+              <nz-option *ngFor="let skill of skillList" [nzValue]="skill.skillId" [nzLabel]="skill.skillName"></nz-option>
+            </nz-select>
+          </td>
         </tr>
       </tbody>
     </nz-table>

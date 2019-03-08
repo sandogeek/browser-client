@@ -1,5 +1,5 @@
 
-import { LoginAuthReq, LoginResultResp, CustomRoleUiInfoResp, MonsterUiInfoResp, RoleUiInfoResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, EnterWorldReq, ObjectDisappearResp, SwitchSceneReq, PingHeartBeat, PongHeartBeat, ChatMessage, ChatReq, ChatResp, GlobalMessage, GetPackContentReq, GetPackContentResp, ItemAddResp, UseItemReq, UseItemResp, MonsterHpUpdate, MonsterMaxHpUpdate, CurrentHpUpdate, CurrentMpUpdate, ExpUpdate, LevelUpdate, MaxHpUpdate, MaxMpUpdate, UseSkillReq, SceneUiInfoResp } from '../proto/bundle';
+import { LoginAuthReq, LoginResultResp, CustomRoleUiInfoResp, MonsterUiInfoResp, RoleUiInfoResp, RegisterReq, RegisterResp, AddRoleReq, AddRoleResp, ChooseRoleReq, ChooseRoleResp, DeleteRoleReq, DeleteRoleResp, GetRoleListReq, GetRoleListResp, EnterWorldReq, ObjectDisappearResp, SwitchSceneReq, PingHeartBeat, PongHeartBeat, ChatMessage, ChatReq, ChatResp, GlobalMessage, GetPackContentReq, GetPackContentResp, ItemAddResp, UseItemReq, UseItemResp, MonsterHpUpdate, MonsterMaxHpUpdate, CurrentHpUpdate, CurrentMpUpdate, ExpUpdate, LevelUpdate, MaxHpUpdate, MaxMpUpdate, SkillListUpdate, UseSkillReq, SceneUiInfoResp } from '../proto/bundle';
 import { Type } from '@angular/core';
 import { Reader, Writer } from 'protobufjs';
 import { IPacket } from './IPacket';
@@ -89,6 +89,8 @@ export class PacketId {
     static readonly MAX_HP_UPDATE: number = 10311;
     /** 最大蓝量更新包*/
     static readonly MAX_MP_UPDATE: number = 10312;
+    /** 技能列表更新*/
+    static readonly SKILL_LIST_UPDATE: number = 10702;
     /** 使用技能请求*/
     static readonly USE_SKILL_REQ: number = 10701;
     /** 场景信息响应包*/
@@ -134,6 +136,7 @@ export class PacketId {
         PacketId.put(PacketId.LEVEL_UPDATE, LevelUpdate);
         PacketId.put(PacketId.MAX_HP_UPDATE, MaxHpUpdate);
         PacketId.put(PacketId.MAX_MP_UPDATE, MaxMpUpdate);
+        PacketId.put(PacketId.SKILL_LIST_UPDATE, SkillListUpdate);
         PacketId.put(PacketId.USE_SKILL_REQ, UseSkillReq);
         PacketId.put(PacketId.SCENE_UI_INFO_RESP, SceneUiInfoResp);
         // end

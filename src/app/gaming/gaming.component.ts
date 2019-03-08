@@ -2,7 +2,9 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { WebSocketService, CustomMessage } from '../shared/service/web-socket-service.service';
 import { PartialObserver } from 'rxjs';
 import {  EnterWorldReq, RoleUiInfoResp,
-  ObjectDisappearResp, SceneUiInfoResp, ISceneCanGoInfo, SwitchSceneReq, MonsterUiInfoResp, CustomRoleUiInfoResp } from '../shared/model/proto/bundle';
+  ObjectDisappearResp, SceneUiInfoResp,
+   ISceneCanGoInfo, SwitchSceneReq, 
+   MonsterUiInfoResp, CustomRoleUiInfoResp, SkillUiInfo, UseSkillReq, SkillListUpdate, ISkillUiInfo } from '../shared/model/proto/bundle';
 import { Role, CustomRole } from '../choose-role/model/Role';
 import { RoleService } from '../shared/service/role.service';
 import { NzModalService } from 'ng-zorro-antd';
@@ -15,6 +17,7 @@ import { ChatService } from './chat/service/chat.service';
 import { BackpackService } from './backpack/service/backpack.service';
 import { PacketId } from '../shared/model/packet/PacketId';
 import * as Long from 'long';
+import {parse, stringtify} from 'json-bigint';
 
 @Component({
   selector: 'app-gaming',
@@ -34,13 +37,9 @@ export class GamingComponent implements OnInit {
   packetId: number;
   content: string;
 
-  selfInfo = [
-    `昵称：${this.myName}`,
-    `角色类型：${this.myRoleTypeName}`,
-    `等级：${this.myLevel}`,
-    `血量：${this.myCurrentHp}/${this.myMaxHp}`,
-    `蓝量：${this.myCurrentMp}/${this.myMaxMp}`
-  ];
+  selfInfo = [this];
+
+  selectedSkillId = 1;
 
   infoObserver: PartialObserver<CustomMessage> = {
     next : message => {
@@ -86,6 +85,7 @@ export class GamingComponent implements OnInit {
     },
     error: err => console.log(err)
   };
+
   constructor(
     private wsService: WebSocketService,
     private roleService: RoleService,
@@ -98,6 +98,7 @@ export class GamingComponent implements OnInit {
     this.wsService.observable.subscribe(this.objectDisappearObserver);
     this.wsService.observable.subscribe(this.selfInfoUpdate$);
     wsService.sendPacket(EnterWorldReq, {});
+    // this.skillList.push(new SkillUiInfo({skillId: 1, skillName: '普通攻击'}));
   }
 
   switchTo = (sceneId: number) => {
@@ -153,9 +154,13 @@ export class GamingComponent implements OnInit {
     });
   }
 
+  useSkill = (objId: number|Long) => {
+    this.wsService.sendPacket(UseSkillReq, {skillId: this.selectedSkillId, targetId: objId});
+  }
+
   send = () => {
     const clazz = PacketId.packetId2Class.get(this.packetId);
-    this.wsService.sendPacket(clazz, JSON.parse(this.content));
+    this.wsService.sendPacket(clazz, parse(this.content));
   }
 
   ngOnInit() {
@@ -175,6 +180,10 @@ export class GamingComponent implements OnInit {
   }
   set monstersMap(monstersMap: Map<string, MonsterUiInfoResp>) {
     this.roleService.monstersMap = monstersMap;
+  }
+
+  get skillList() {
+    return this.roleService.skillList;
   }
 
 
